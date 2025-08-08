@@ -33,7 +33,7 @@ const Advert = () => {
               <div className="product-item product-item--chair">
                 <div className="product-item__image">
                   <img 
-                    src="/api/placeholder/200/200" 
+                    src="https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=400&h=400&fit=crop&crop=center" 
                     alt="Gaming Chair" 
                     className="product-image"
                   />
@@ -41,11 +41,11 @@ const Advert = () => {
                 <div className="product-item__glow"></div>
               </div>
               
-              {/* Motherboards */}
+              {/* Motherboard 1 */}
               <div className="product-item product-item--motherboard-1">
                 <div className="product-item__image">
                   <img 
-                    src="/api/placeholder/180/140" 
+                    src="https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?w=400&h=300&fit=crop&crop=center" 
                     alt="ASUS Motherboard" 
                     className="product-image"
                   />
@@ -53,10 +53,11 @@ const Advert = () => {
                 <div className="product-item__glow"></div>
               </div>
               
+              {/* Motherboard 2 */}
               <div className="product-item product-item--motherboard-2">
                 <div className="product-item__image">
                   <img 
-                    src="/api/placeholder/180/140" 
+                    src="https://images.unsplash.com/photo-1555617981-dac3880eac6e?w=400&h=300&fit=crop&crop=center" 
                     alt="ROG Motherboard" 
                     className="product-image"
                   />
@@ -69,18 +70,8 @@ const Advert = () => {
         
         {/* Background Elements */}
         <div className="advert__background">
-          <div className="bg-element bg-element--1"></div>
-          <div className="bg-element bg-element--2"></div>
-          <div className="bg-element bg-element--3"></div>
-        </div>
-        
-        {/* Floating Particles */}
-        <div className="particles">
-          <div className="particle particle--1"></div>
-          <div className="particle particle--2"></div>
-          <div className="particle particle--3"></div>
-          <div className="particle particle--4"></div>
-          <div className="particle particle--5"></div>
+          <div className="bg-gradient bg-gradient--1"></div>
+          <div className="bg-gradient bg-gradient--2"></div>
         </div>
       </div>
     </section>

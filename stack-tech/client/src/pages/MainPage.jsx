@@ -3,12 +3,11 @@ import './MainPage.css';
 
 const MainPage = () => {
   const [isVisible, setIsVisible] = useState(false);
-  const [hoveredProduct, setHoveredProduct] = useState(null);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsVisible(true);
-    }, 100);
+    }, 300);
 
     return () => clearTimeout(timer);
   }, []);
@@ -16,182 +15,121 @@ const MainPage = () => {
   const products = [
     {
       id: 1,
-      name: "Intel i5-13400 Gaming PC Special 1",
-      price: "$1,649.00",
-      image: "/api/placeholder/300/300",
-      specs: ["Intel i5-13400", "16GB DDR4", "RTX 4060", "1TB SSD"],
-      tag: "POPULAR"
+      name: "Intel i3-13100 Gaming PC Special 4",
+      price: "$1,640.00",
+      image: "https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=400&h=400&fit=crop&crop=center",
+      specs: ["Intel i3-13100", "16GB DDR4", "RTX 4060", "500GB SSD"]
     },
     {
       id: 2,
-      name: "Magic 320 Complete Gaming Setup",
-      price: "$1,559.00",
-      image: "/api/placeholder/300/300",
-      specs: ["AMD Ryzen 5", "16GB DDR4", "RTX 3060", "500GB SSD"],
-      tag: "NEW"
+      name: "Magic 12th Gen Intel Gamer 6450",
+      price: "$1,150.00",
+      image: "https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=400&h=400&fit=crop&crop=center",
+      specs: ["Intel i5-12400", "16GB DDR4", "RTX 3060", "1TB SSD"]
     },
     {
       id: 3,
-      name: "Intel i7-13700K Gaming PC Special 2",
+      name: "Intel i7-13700K Gaming PC Special 4",
       price: "$2,099.00",
-      image: "/api/placeholder/300/300",
-      specs: ["Intel i7-13700K", "32GB DDR5", "RTX 4070", "1TB NVMe"],
-      tag: "PREMIUM"
+      image: "https://images.unsplash.com/photo-1591238371432-37633bfe69ae?w=400&h=400&fit=crop&crop=center",
+      specs: ["Intel i7-13700K", "32GB DDR5", "RTX 4070", "1TB NVMe"]
     },
     {
       id: 4,
-      name: "AMD Ryzen 7 Gaming PC",
-      price: "$2,299.00",
-      image: "/api/placeholder/300/300",
-      specs: ["AMD Ryzen 7", "32GB DDR5", "RTX 4070 Ti", "2TB SSD"],
-      tag: "BESTSELLER"
+      name: "Intel i7-13700K Gaming PC Special 1",
+      price: "$2,289.00",
+      image: "https://images.unsplash.com/photo-1555617981-dac3880eac6e?w=400&h=400&fit=crop&crop=center",
+      specs: ["Intel i7-13700K", "32GB DDR5", "RTX 4070 Ti", "2TB SSD"]
     },
     {
       id: 5,
       name: "Intel i5-13400 Gaming PC Special 1",
-      price: "$899.00",
-      image: "/api/placeholder/300/300",
-      specs: ["Intel i5-13400", "16GB DDR4", "GTX 1660", "500GB SSD"],
-      tag: "BUDGET"
+      price: "$859.00",
+      image: "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=400&h=400&fit=crop&crop=center",
+      specs: ["Intel i5-13400", "16GB DDR4", "GTX 1660", "500GB SSD"]
     },
     {
       id: 6,
-      name: "Magic RGB Gaming Setup Extra",
-      price: "$1,799.00",
-      image: "/api/placeholder/300/300",
-      specs: ["AMD Ryzen 5", "16GB DDR4", "RTX 4060 Ti", "1TB SSD"],
-      tag: "RGB"
-    }
-  ];
-
-  const trustFeatures = [
-    {
-      icon: "🛡️",
-      title: "Trusted Builder",
-      description: "Over 10,000 custom PCs built with expert craftsmanship and quality components."
-    },
-    {
-      icon: "🏆",
-      title: "12-Month Warranty",
-      description: "Comprehensive warranty coverage on all components and professional assembly."
-    },
-    {
-      icon: "🎧",
-      title: "24/7 Support",
-      description: "Round-the-clock technical support for all your gaming PC needs and questions."
+      name: "Magic 12th Gen Intel Gamer 6450",
+      price: "$1,129.00",
+      image: "https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=400&h=400&fit=crop&crop=center",
+      specs: ["Intel i5-12400", "16GB DDR4", "RTX 4060 Ti", "1TB SSD"]
     }
   ];
 
   return (
     <main className={`main-page ${isVisible ? 'main-page--visible' : ''}`}>
-      {/* Hero Section */}
-      <section className="hero-section">
-        <div className="hero-container">
-          <div className="hero-content">
-            <h1 className="hero-title">
-              <span className="hero-title-line">Premium Gaming</span>
-              <span className="hero-title-line hero-title-line--accent">PCs Built for You</span>
-            </h1>
-            <p className="hero-description">
-              Discover our collection of high-performance gaming computers, 
-              built with cutting-edge components and backed by our expertise.
-            </p>
-            <div className="hero-actions">
-              <button className="btn btn--primary">Shop Pre-Built</button>
-              <button className="btn btn--secondary">Custom Build</button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Products Grid */}
-      <section className="products-section">
-        <div className="products-container">
-          <div className="section-header">
-            <h2 className="section-title">Featured Gaming PCs</h2>
-            <p className="section-subtitle">Hand-picked systems for every gaming enthusiast</p>
-          </div>
-
-          <div className="products-grid">
-            {products.map((product, index) => (
-              <div 
-                key={product.id}
-                className={`product-card ${hoveredProduct === product.id ? 'product-card--hovered' : ''}`}
-                onMouseEnter={() => setHoveredProduct(product.id)}
-                onMouseLeave={() => setHoveredProduct(null)}
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                {product.tag && (
-                  <div className={`product-tag product-tag--${product.tag.toLowerCase()}`}>
-                    {product.tag}
-                  </div>
-                )}
-                
-                <div className="product-image-container">
-                  <img 
-                    src={product.image} 
-                    alt={product.name}
-                    className="product-image"
-                  />
-                  <div className="product-overlay">
-                    <button className="btn btn--quick-view">Quick View</button>
-                  </div>
-                </div>
-
-                <div className="product-info">
-                  <h3 className="product-name">{product.name}</h3>
-                  
-                  <div className="product-specs">
-                    {product.specs.map((spec, specIndex) => (
-                      <span key={specIndex} className="spec-item">{spec}</span>
-                    ))}
-                  </div>
-
-                  <div className="product-footer">
-                    <div className="product-price">{product.price}</div>
-                    <button className="btn btn--add-cart">ADD TO CART</button>
-                  </div>
-                </div>
-
-                <div className="product-glow"></div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Trust Features */}
-      <section className="trust-section">
-        <div className="trust-container">
-          {trustFeatures.map((feature, index) => (
+      <div className="main-page__container">
+        <div className="products-grid">
+          {products.map((product, index) => (
             <div 
-              key={index}
-              className="trust-card"
-              style={{ animationDelay: `${index * 0.2}s` }}
+              key={product.id}
+              className="product-card"
+              style={{ animationDelay: `${index * 0.1}s` }}
             >
-              <div className="trust-icon">{feature.icon}</div>
-              <h3 className="trust-title">{feature.title}</h3>
-              <p className="trust-description">{feature.description}</p>
+              <div className="product-image-container">
+                <img 
+                  src={product.image} 
+                  alt={product.name}
+                  className="product-image"
+                />
+              </div>
+
+              <div className="product-info">
+                <h3 className="product-name">{product.name}</h3>
+                <div className="product-price">{product.price}</div>
+                <button className="add-to-cart-btn">Add to Cart</button>
+              </div>
             </div>
           ))}
         </div>
-      </section>
 
-      {/* Background Elements */}
-      <div className="page-background">
-        <div className="bg-shape bg-shape--1"></div>
-        <div className="bg-shape bg-shape--2"></div>
-        <div className="bg-shape bg-shape--3"></div>
-      </div>
+        {/* Trust Features Section */}
+        <div className="trust-features">
+          <div className="trust-item">
+            <div className="trust-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M9 12l2 2 4-4"/>
+                <path d="M21 12c-1 0-3-1-3-3s2-3 3-3 3 1 3 3-2 3-3 3"/>
+                <path d="M3 12c1 0 3-1 3-3s-2-3-3-3-3 1-3 3 2 3 3 3"/>
+                <path d="M12 3c0 1-1 3-3 3s-3-2-3-3 1-3 3-3 3 2 3 3"/>
+                <path d="M12 21c0-1 1-3 3-3s3 2 3 3-1 3-3 3-3-2-3-3"/>
+              </svg>
+            </div>
+            <div className="trust-content">
+              <h4 className="trust-title">Trusted Builder</h4>
+              <p className="trust-description">Over 5 years of experience assembling high-performance PCs</p>
+            </div>
+          </div>
 
-      {/* Floating Particles */}
-      <div className="page-particles">
-        {[...Array(8)].map((_, i) => (
-          <div 
-            key={i}
-            className={`page-particle page-particle--${i + 1}`}
-          ></div>
-        ))}
+          <div className="trust-item">
+            <div className="trust-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M8 12l2 2 4-4"/>
+              </svg>
+            </div>
+            <div className="trust-content">
+              <h4 className="trust-title">12-Month Warranty</h4>
+              <p className="trust-description">Every system comes with a 1-year parts and labor warranty</p>
+            </div>
+          </div>
+
+          <div className="trust-item">
+            <div className="trust-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+            </div>
+            <div className="trust-content">
+              <h4 className="trust-title">24/7 Support</h4>
+              <p className="trust-description">Have What You Need Us. Our tech support team is available any time</p>
+            </div>
+          </div>
+        </div>
       </div>
     </main>
   );
