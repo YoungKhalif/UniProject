@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './css/SignUp.css';
 
 const SignUp = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
     username: '',
@@ -105,7 +107,8 @@ const SignUp = () => {
         confirmPassword: ''
       });
       
-      alert('Account created successfully! Please check your email for verification.');
+      // Navigate to login page after successful signup
+      navigate('/login');
     } catch (error) {
       console.error('Sign up error:', error);
       alert('An error occurred during sign up. Please try again.');
@@ -346,9 +349,13 @@ const SignUp = () => {
               <div className="form__footer">
                 <p className="form__footer-text">
                   Already have an account?{' '}
-                  <a href="#login" className="form__link form__link--primary">
+                  <button 
+                    type="button"
+                    className="form__link form__link--primary"
+                    onClick={() => navigate('/login')}
+                  >
                     Sign In
-                  </a>
+                  </button>
                 </p>
               </div>
             </form>

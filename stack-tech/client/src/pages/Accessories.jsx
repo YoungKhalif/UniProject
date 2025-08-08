@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Header from '../component/Header';
+import Footer from '../component/Footer';
 import './Accessories.css';
 
 // Product data matching the reference image
@@ -66,6 +69,7 @@ const products = [
 ];
 
 const Accessories = () => {
+  const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState('');
   const [priceRange, setPriceRange] = useState([0, 3000]);
   const [selectedCompatibility, setSelectedCompatibility] = useState('');
@@ -75,6 +79,12 @@ const Accessories = () => {
 
   const categories = ['All', 'Laptops', 'Monitors', 'Keyboards', 'Audio', 'Mice', 'Cases', 'Cooling'];
   const compatibilityOptions = ['All', 'Works with AMD builds', 'Works with Intel builds', 'Universal'];
+
+  const handleAddToCart = (product) => {
+    console.log('Adding to cart:', product);
+    // Add to cart logic here
+    navigate('/cart');
+  };
 
   useEffect(() => {
     // Simulate loading
@@ -122,11 +132,6 @@ const Accessories = () => {
     setFilteredProducts(filtered);
   }, [selectedCategory, priceRange, selectedCompatibility, sortBy]);
 
-  const handleAddToCart = (product) => {
-    console.log('Added to cart:', product);
-    // Add cart animation or notification here
-  };
-
   const formatPrice = (price) => {
     return `$${price.toFixed(2)}`;
   };
@@ -141,7 +146,9 @@ const Accessories = () => {
   }
 
   return (
-    <div className="accessories">
+    <>
+      <Header />
+      <div className="accessories">
       <div className="accessories__container">
         {/* Sidebar Filters */}
         <aside className="accessories__sidebar">
@@ -335,7 +342,9 @@ const Accessories = () => {
           )}
         </main>
       </div>
-    </div>
+      </div>
+      <Footer />
+    </>
   );
 };
 

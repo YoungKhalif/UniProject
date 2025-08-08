@@ -1,8 +1,7 @@
 import Header from '../component/Header';
 import Advert from '../component/Advert';
-import MainPage from './MainPage';
 import Footer from '../component/Footer';
-
+import ItemsDisplay from './ItemsDisplay';
 
 
 const Home = () => {
@@ -10,7 +9,7 @@ const Home = () => {
     <>
       <Header />
       <Advert />
-      <MainPage />
+      <ItemsDisplay />
       <Footer />
     </>
   );

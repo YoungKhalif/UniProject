@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './css/Login.css';
 
 const Login = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     emailOrUsername: '',
     password: ''
@@ -72,7 +74,8 @@ const Login = () => {
       });
       setRememberMe(false);
       
-      alert('Login successful! Welcome back to Stack Technologies.');
+      // Navigate to home page after successful login
+      navigate('/home');
     } catch (error) {
       console.error('Login error:', error);
       setErrors({ general: 'Invalid credentials. Please try again.' });
@@ -252,9 +255,13 @@ const Login = () => {
               <div className="form__footer">
                 <p className="form__footer-text">
                   Don't have an account?{' '}
-                  <a href="#signup" className="form__link form__link--primary">
+                  <button 
+                    type="button"
+                    className="form__link form__link--primary"
+                    onClick={() => navigate('/signup')}
+                  >
                     Create Account
-                  </a>
+                  </button>
                 </p>
               </div>
             </form>

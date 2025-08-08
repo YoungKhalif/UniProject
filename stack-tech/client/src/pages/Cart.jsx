@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Cart.css';
 
 // Initial cart data matching the reference image - moved outside component
@@ -39,6 +40,7 @@ const Cart = () => {
   const [subtotal, setSubtotal] = useState(0);
   const [shipping, setShipping] = useState(0);
   const [orderTotal, setOrderTotal] = useState(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Simulate loading cart data
@@ -89,12 +91,12 @@ const Cart = () => {
 
   const handleContinueShopping = () => {
     console.log('Continue shopping clicked');
-    // Navigate back to products
+    navigate('/home');
   };
 
   const handleProceedToCheckout = () => {
     console.log('Proceed to checkout clicked');
-    // Navigate to checkout
+    navigate('/checkout');
   };
 
   if (isLoading) {

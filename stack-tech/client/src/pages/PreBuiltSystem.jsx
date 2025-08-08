@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Header from '../component/Header';
+import Footer from '../component/Footer';
 import './PreBuiltSystem.css';
 
 const PreBuiltSystem = () => {
@@ -12,6 +15,7 @@ const PreBuiltSystem = () => {
   });
   const [sortBy, setSortBy] = useState('featured');
   const [hoveredProduct, setHoveredProduct] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -24,202 +28,175 @@ const PreBuiltSystem = () => {
   const preBuiltSystems = [
     {
       id: 1,
-      name: "Intel i7-13700KF Desktop Box CPU RTX 4070 Ti",
-      price: "$3,299.00",
-      originalPrice: "$3,599.00",
-      image: "/api/placeholder/300/300",
+      name: "Intel i5-13100 Gaming PC Special 4",
+      price: "$2,570.00",
+      image: "https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=400&h=400&fit=crop&crop=center",
       specs: [
-        "Intel Core i7-13700KF",
-        "NVIDIA RTX 4070 Ti 12GB",
-        "32GB DDR5 RAM",
-        "1TB NVMe SSD",
-        "850W 80+ Gold PSU",
-        "RGB Lighting"
+        "Intel Core i5-13100",
+        "NVIDIA RTX 4060 Ti",
+        "16GB DDR4 RAM",
+        "500GB NVMe SSD",
+        "650W 80+ Gold PSU"
       ],
-      category: "high-end",
+      category: "mid-range",
       processor: "intel",
-      gpu: "rtx-4070-ti",
-      ram: "32gb",
-      storage: "1tb",
-      badge: "BESTSELLER"
+      gpu: "rtx-4060-ti",
+      ram: "16gb",
+      storage: "500gb"
     },
     {
       id: 2,
-      name: "AMD AM5 Ryzen 5 7600X RTX 4060 Ti",
-      price: "$2,799.00",
-      originalPrice: "$3,099.00",
-      image: "/api/placeholder/300/300",
+      name: "AMD AM5 Series AM7X GT Elite PC",
+      price: "$3,700.00",
+      image: "https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=400&h=400&fit=crop&crop=center",
       specs: [
-        "AMD Ryzen 5 7600X",
-        "NVIDIA RTX 4060 Ti 16GB",
-        "16GB DDR5 RAM",
-        "1TB NVMe SSD",
-        "750W 80+ Gold PSU",
-        "Tempered Glass"
-      ],
-      category: "mid-range",
-      processor: "amd",
-      gpu: "rtx-4060-ti",
-      ram: "16gb",
-      storage: "1tb",
-      badge: "POPULAR"
-    },
-    {
-      id: 3,
-      name: "Intel i5-13400F RTX 4060 Gaming Desktop",
-      price: "$2,299.00",
-      originalPrice: "$2,599.00",
-      image: "/api/placeholder/300/300",
-      specs: [
-        "Intel Core i5-13400F",
-        "NVIDIA RTX 4060 8GB",
-        "16GB DDR4 RAM",
-        "500GB NVMe SSD",
-        "650W 80+ Bronze PSU",
-        "RGB Fans"
-      ],
-      category: "budget",
-      processor: "intel",
-      gpu: "rtx-4060",
-      ram: "16gb",
-      storage: "500gb",
-      badge: "VALUE"
-    },
-    {
-      id: 4,
-      name: "Magic Ultra RTX 4090 Supreme Gaming Build",
-      price: "$4,999.00",
-      originalPrice: "$5,499.00",
-      image: "/api/placeholder/300/300",
-      specs: [
-        "Intel Core i9-13900KF",
-        "NVIDIA RTX 4090 24GB",
-        "64GB DDR5 RAM",
-        "2TB NVMe SSD",
-        "1000W 80+ Platinum PSU",
-        "Custom Loop Cooling"
-      ],
-      category: "premium",
-      processor: "intel",
-      gpu: "rtx-4090",
-      ram: "64gb",
-      storage: "2tb",
-      badge: "FLAGSHIP"
-    },
-    {
-      id: 5,
-      name: "AMD Ryzen 7 7800X3D RTX 4070 Gaming PC",
-      price: "$3,599.00",
-      originalPrice: "$3,899.00",
-      image: "/api/placeholder/300/300",
-      specs: [
-        "AMD Ryzen 7 7800X3D",
-        "NVIDIA RTX 4070 12GB",
+        "AMD Ryzen 7 7700X",
+        "NVIDIA RTX 4070 Ti",
         "32GB DDR5 RAM",
         "1TB NVMe SSD",
-        "850W 80+ Gold PSU",
-        "AIO Liquid Cooling"
+        "850W 80+ Gold PSU"
       ],
       category: "high-end",
       processor: "amd",
-      gpu: "rtx-4070",
+      gpu: "rtx-4070-ti",
       ram: "32gb",
-      storage: "1tb",
-      badge: "GAMING"
+      storage: "1tb"
+    },
+    {
+      id: 3,
+      name: "Intel i7-13700K Gaming PC Special 4",
+      price: "$4,320.00",
+      image: "https://images.unsplash.com/photo-1591238371432-37633bfe69ae?w=400&h=400&fit=crop&crop=center",
+      specs: [
+        "Intel Core i7-13700K",
+        "NVIDIA RTX 4080",
+        "32GB DDR5 RAM",
+        "1TB NVMe SSD",
+        "1000W 80+ Platinum PSU"
+      ],
+      category: "premium",
+      processor: "intel",
+      gpu: "rtx-4080",
+      ram: "32gb",
+      storage: "1tb"
+    },
+    {
+      id: 4,
+      name: "Magic Intel RTX AMD Ryzen 5 Business Pro",
+      price: "$600.00",
+      image: "https://images.unsplash.com/photo-1555617981-dac3880eac6e?w=400&h=400&fit=crop&crop=center",
+      specs: [
+        "AMD Ryzen 5 5600G",
+        "Integrated Graphics",
+        "16GB DDR4 RAM",
+        "256GB NVMe SSD",
+        "450W 80+ Bronze PSU"
+      ],
+      category: "budget",
+      processor: "amd",
+      gpu: "integrated",
+      ram: "16gb",
+      storage: "256gb"
+    },
+    {
+      id: 5,
+      name: "Intel i9-13900K Gaming PC Special 1",
+      price: "$620.00",
+      image: "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=400&h=400&fit=crop&crop=center",
+      specs: [
+        "Intel Core i9-13900K",
+        "NVIDIA RTX 4090",
+        "64GB DDR5 RAM",
+        "2TB NVMe SSD",
+        "1200W 80+ Titanium PSU"
+      ],
+      category: "extreme",
+      processor: "intel",
+      gpu: "rtx-4090",
+      ram: "64gb",
+      storage: "2tb"
     },
     {
       id: 6,
-      name: "Budget Builder RTX 4060 Starter System",
-      price: "$1,899.00",
-      originalPrice: "$2,199.00",
-      image: "/api/placeholder/300/300",
-      specs: [
-        "Intel Core i5-12400F",
-        "NVIDIA RTX 4060 8GB",
-        "16GB DDR4 RAM",
-        "500GB NVMe SSD",
-        "600W 80+ Bronze PSU",
-        "Standard Cooling"
-      ],
-      category: "budget",
-      processor: "intel",
-      gpu: "rtx-4060",
-      ram: "16gb",
-      storage: "500gb",
-      badge: "STARTER"
-    },
-    {
-      id: 7,
-      name: "Creator Pro RTX 4080 Workstation",
-      price: "$4,299.00",
-      originalPrice: "$4,699.00",
-      image: "/api/placeholder/300/300",
-      specs: [
-        "Intel Core i7-13700K",
-        "NVIDIA RTX 4080 16GB",
-        "64GB DDR5 RAM",
-        "2TB NVMe SSD",
-        "1000W 80+ Gold PSU",
-        "Silent Cooling"
-      ],
-      category: "workstation",
-      processor: "intel",
-      gpu: "rtx-4080",
-      ram: "64gb",
-      storage: "2tb",
-      badge: "CREATOR"
-    },
-    {
-      id: 8,
       name: "Compact Gaming RTX 4070 Mini ITX",
-      price: "$2,999.00",
-      originalPrice: "$3,299.00",
-      image: "/api/placeholder/300/300",
+      price: "$870.00",
+      image: "https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=400&h=400&fit=crop&crop=center",
       specs: [
         "AMD Ryzen 5 7600X",
-        "NVIDIA RTX 4070 12GB",
+        "NVIDIA RTX 4070",
         "32GB DDR5 RAM",
         "1TB NVMe SSD",
-        "750W SFX PSU",
-        "Mini ITX Form"
+        "750W SFX PSU"
       ],
       category: "compact",
       processor: "amd",
       gpu: "rtx-4070",
       ram: "32gb",
-      storage: "1tb",
-      badge: "COMPACT"
+      storage: "1tb"
+    },
+    {
+      id: 7,
+      name: "Creator Pro RTX 4080 Workstation",
+      price: "$1999.00",
+      image: "https://images.unsplash.com/photo-1555617981-dac3880eac6e?w=400&h=400&fit=crop&crop=center",
+      specs: [
+        "Intel Core i7-13700K",
+        "NVIDIA RTX 4080",
+        "64GB DDR5 RAM",
+        "2TB NVMe SSD",
+        "1000W 80+ Gold PSU"
+      ],
+      category: "workstation",
+      processor: "intel",
+      gpu: "rtx-4080",
+      ram: "64gb",
+      storage: "2tb"
+    },
+    {
+      id: 8,
+      name: "Budget Starter Gaming PC",
+      price: "$590.00",
+      image: "https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=400&h=400&fit=crop&crop=center",
+      specs: [
+        "Intel Core i5-12400F",
+        "NVIDIA GTX 1660 Super",
+        "16GB DDR4 RAM",
+        "500GB SATA SSD",
+        "600W 80+ Bronze PSU"
+      ],
+      category: "budget",
+      processor: "intel",
+      gpu: "gtx-1660",
+      ram: "16gb",
+      storage: "500gb"
     },
     {
       id: 9,
-      name: "Extreme Gaming RTX 4090 Ultimate",
-      price: "$5,999.00",
-      originalPrice: "$6,499.00",
-      image: "/api/placeholder/300/300",
+      name: "Ultimate Gaming Beast RTX 4090",
+      price: "$1280.00",
+      image: "https://images.unsplash.com/photo-1591238371432-37633bfe69ae?w=400&h=400&fit=crop&crop=center",
       specs: [
         "Intel Core i9-13900KS",
-        "NVIDIA RTX 4090 24GB",
+        "NVIDIA RTX 4090",
         "128GB DDR5 RAM",
         "4TB NVMe SSD",
-        "1200W 80+ Titanium PSU",
-        "Custom RGB Loop"
+        "1600W 80+ Titanium PSU"
       ],
       category: "extreme",
       processor: "intel",
       gpu: "rtx-4090",
       ram: "128gb",
-      storage: "4tb",
-      badge: "EXTREME"
+      storage: "4tb"
     }
   ];
 
   const filterOptions = {
     priceRange: [
       { value: '', label: 'All Prices' },
-      { value: '0-2000', label: 'Under $2,000' },
-      { value: '2000-3000', label: '$2,000 - $3,000' },
-      { value: '3000-5000', label: '$3,000 - $5,000' },
-      { value: '5000+', label: '$5,000+' }
+      { value: '0-1000', label: 'Under $1,000' },
+      { value: '1000-2000', label: '$1,000 - $2,000' },
+      { value: '2000-4000', label: '$2,000 - $4,000' },
+      { value: '4000+', label: '$4,000+' }
     ],
     processor: [
       { value: '', label: 'All Processors' },
@@ -228,6 +205,8 @@ const PreBuiltSystem = () => {
     ],
     gpu: [
       { value: '', label: 'All GPUs' },
+      { value: 'integrated', label: 'Integrated' },
+      { value: 'gtx-1660', label: 'GTX 1660' },
       { value: 'rtx-4060', label: 'RTX 4060' },
       { value: 'rtx-4060-ti', label: 'RTX 4060 Ti' },
       { value: 'rtx-4070', label: 'RTX 4070' },
@@ -244,6 +223,7 @@ const PreBuiltSystem = () => {
     ],
     storage: [
       { value: '', label: 'All Storage' },
+      { value: '256gb', label: '256GB' },
       { value: '500gb', label: '500GB' },
       { value: '1tb', label: '1TB' },
       { value: '2tb', label: '2TB' },
@@ -260,7 +240,7 @@ const PreBuiltSystem = () => {
 
   const handleAddToCart = (product) => {
     console.log('Adding to cart:', product);
-    // Add to cart logic here
+    navigate('/cart');
   };
 
   const filteredSystems = preBuiltSystems.filter(system => {
@@ -282,137 +262,154 @@ const PreBuiltSystem = () => {
   });
 
   return (
-    <div className={`prebuilt-systems ${isVisible ? 'prebuilt-systems--visible' : ''}`}>
-      {/* Header Section */}
-      <section className="prebuilt-header">
-        <div className="prebuilt-header__container">
-          <h1 className="prebuilt-header__title">
-            <span className="title-line">Pre-Built</span>
-            <span className="title-line title-line--accent">Gaming Systems</span>
-          </h1>
-          <p className="prebuilt-header__subtitle">
-            Expertly crafted gaming PCs ready to dominate any battlefield
-          </p>
-        </div>
-      </section>
+    <>
+      <Header />
+      <div className={`prebuilt-systems ${isVisible ? 'prebuilt-systems--visible' : ''}`}>
+        <div className="prebuilt-container">
+          {/* Sidebar Filters */}
+          <aside className="filters-sidebar">
+            <div className="filters-header">
+              <h3 className="filters-title">PROCESSORS</h3>
+            </div>
+            <div className="filter-section">
+              <div className="filter-group">
+                {filterOptions.processor.slice(1).map(option => (
+                  <label key={option.value} className="filter-option">
+                    <input
+                      type="radio"
+                      name="processor"
+                      value={option.value}
+                      checked={selectedFilters.processor === option.value}
+                      onChange={(e) => handleFilterChange('processor', e.target.value)}
+                      className="filter-radio"
+                    />
+                    <span className="filter-label">{option.label}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
 
-      {/* Filters Section */}
-      <section className="filters-section">
-        <div className="filters-container">
-          <div className="filters-grid">
-            {Object.entries(filterOptions).map(([filterType, options]) => (
-              <div key={filterType} className="filter-group">
-                <select
-                  value={selectedFilters[filterType]}
-                  onChange={(e) => handleFilterChange(filterType, e.target.value)}
-                  className="filter-select"
+            <div className="filters-header">
+              <h3 className="filters-title">GPU</h3>
+            </div>
+            <div className="filter-section">
+              <div className="filter-group">
+                {filterOptions.gpu.slice(1).map(option => (
+                  <label key={option.value} className="filter-option">
+                    <input
+                      type="radio"
+                      name="gpu"
+                      value={option.value}
+                      checked={selectedFilters.gpu === option.value}
+                      onChange={(e) => handleFilterChange('gpu', e.target.value)}
+                      className="filter-radio"
+                    />
+                    <span className="filter-label">{option.label}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            <div className="filters-header">
+              <h3 className="filters-title">PRICE RANGE</h3>
+            </div>
+            <div className="filter-section">
+              <div className="filter-group">
+                {filterOptions.priceRange.slice(1).map(option => (
+                  <label key={option.value} className="filter-option">
+                    <input
+                      type="radio"
+                      name="priceRange"
+                      value={option.value}
+                      checked={selectedFilters.priceRange === option.value}
+                      onChange={(e) => handleFilterChange('priceRange', e.target.value)}
+                      className="filter-radio"
+                    />
+                    <span className="filter-label">{option.label}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            <div className="filters-header">
+              <h3 className="filters-title">RAM / STORAGE</h3>
+            </div>
+            <div className="filter-section">
+              <div className="filter-group">
+                {filterOptions.ram.slice(1).map(option => (
+                  <label key={option.value} className="filter-option">
+                    <input
+                      type="radio"
+                      name="ram"
+                      value={option.value}
+                      checked={selectedFilters.ram === option.value}
+                      onChange={(e) => handleFilterChange('ram', e.target.value)}
+                      className="filter-radio"
+                    />
+                    <span className="filter-label">{option.label} RAM</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          </aside>
+
+          {/* Main Content */}
+          <main className="products-main">
+            {/* Products Grid */}
+            <div className="products-grid">
+              {filteredSystems.map((system, index) => (
+                <div 
+                  key={system.id}
+                  className={`product-card ${hoveredProduct === system.id ? 'product-card--hovered' : ''}`}
+                  onMouseEnter={() => setHoveredProduct(system.id)}
+                  onMouseLeave={() => setHoveredProduct(null)}
+                  style={{ animationDelay: `${index * 0.1}s` }}
                 >
-                  {options.map(option => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            ))}
-          </div>
-          
-          <div className="sort-controls">
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="sort-select"
-            >
-              <option value="featured">Featured</option>
-              <option value="price-low">Price: Low to High</option>
-              <option value="price-high">Price: High to Low</option>
-              <option value="name">Name A-Z</option>
-            </select>
-          </div>
-        </div>
-      </section>
-
-      {/* Products Grid */}
-      <section className="products-section">
-        <div className="products-container">
-          <div className="products-grid">
-            {filteredSystems.map((system, index) => (
-              <div 
-                key={system.id}
-                className={`product-card ${hoveredProduct === system.id ? 'product-card--hovered' : ''}`}
-                onMouseEnter={() => setHoveredProduct(system.id)}
-                onMouseLeave={() => setHoveredProduct(null)}
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                {system.badge && (
-                  <div className={`product-badge product-badge--${system.badge.toLowerCase()}`}>
-                    {system.badge}
-                  </div>
-                )}
-                
-                <div className="product-image-container">
-                  <img 
-                    src={system.image} 
-                    alt={system.name}
-                    className="product-image"
-                  />
-                  <div className="product-overlay">
-                    <button className="btn btn--quick-view">Quick View</button>
-                    <button className="btn btn--compare">Compare</button>
-                  </div>
-                </div>
-
-                <div className="product-info">
-                  <h3 className="product-name">{system.name}</h3>
-                  
-                  <div className="product-specs">
-                    {system.specs.map((spec, specIndex) => (
-                      <div key={specIndex} className="spec-item">
-                        <span className="spec-bullet">•</span>
-                        <span className="spec-text">{spec}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="product-pricing">
-                    <div className="pricing-info">
-                      <span className="current-price">{system.price}</span>
-                      {system.originalPrice && (
-                        <span className="original-price">{system.originalPrice}</span>
-                      )}
-                    </div>
-                    <div className="savings">
-                      {system.originalPrice && (
-                        <span className="savings-amount">
-                          Save ${(parseFloat(system.originalPrice.replace('$', '').replace(',', '')) - 
-                                parseFloat(system.price.replace('$', '').replace(',', ''))).toFixed(0)}
-                        </span>
-                      )}
+                  <div className="product-image-container">
+                    <img 
+                      src={system.image} 
+                      alt={system.name}
+                      className="product-image"
+                    />
+                    <div className="product-price-tag">
+                      {system.price}
                     </div>
                   </div>
 
-                  <button 
-                    className="btn btn--add-to-cart"
-                    onClick={() => handleAddToCart(system)}
-                  >
-                    Add to Cart
-                  </button>
+                  <div className="product-info">
+                    <h3 className="product-name">{system.name}</h3>
+                    
+                    <div className="product-specs">
+                      {system.specs.map((spec, specIndex) => (
+                        <div key={specIndex} className="spec-item">
+                          <span className="spec-bullet">•</span>
+                          <span className="spec-text">{spec}</span>
+                        </div>
+                      ))}
+                    </div>
+
+                    <button 
+                      className="btn-add-to-cart"
+                      onClick={() => handleAddToCart(system)}
+                    >
+                      Add to Cart
+                    </button>
+                  </div>
                 </div>
-
-                <div className="product-glow"></div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          </main>
         </div>
-      </section>
 
-      {/* Background Elements */}
-      <div className="page-background">
-        <div className="bg-element bg-element--1"></div>
-        <div className="bg-element bg-element--2"></div>
-        <div className="bg-element bg-element--3"></div>
+        {/* Background Elements */}
+        <div className="page-background">
+          <div className="bg-circle bg-circle--1"></div>
+          <div className="bg-circle bg-circle--2"></div>
+          <div className="bg-circle bg-circle--3"></div>
+        </div>
       </div>
-    </div>
+      <Footer />
+    </>
   );
 };
 

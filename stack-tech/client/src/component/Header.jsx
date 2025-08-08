@@ -1,12 +1,28 @@
 import React, { useState } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import './css/Header.css';
 
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState('');
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     console.log('Search query:', searchQuery);
+    // You can implement search functionality here
+  };
+
+  const handleLoginClick = () => {
+    navigate('/login');
+  };
+
+  const handleSignUpClick = () => {
+    navigate('/signup');
+  };
+
+  const isActiveRoute = (path) => {
+    return location.pathname === path;
   };
 
   return (
@@ -36,10 +52,16 @@ const Header = () => {
 
             {/* Auth Buttons */}
             <div className="header__auth">
-              <button className="auth__button auth__button--login">
+              <button 
+                className="auth__button auth__button--login"
+                onClick={handleLoginClick}
+              >
                 Login
               </button>
-              <button className="auth__button auth__button--signup">
+              <button 
+                className="auth__button auth__button--signup"
+                onClick={handleSignUpClick}
+              >
                 Sign Up
               </button>
             </div>
@@ -52,41 +74,55 @@ const Header = () => {
         <div className="header__bottom-container">
           {/* Logo Section */}
           <div className="header__logo">
-            <div className="logo__icon">
-              <div className="logo__stack">
-                <div className="stack__layer stack__layer--1"></div>
-                <div className="stack__layer stack__layer--2"></div>
-                <div className="stack__layer stack__layer--3"></div>
+            <Link to="/home" className="logo__link">
+              <div className="logo__icon">
+                <div className="logo__stack">
+                  <div className="stack__layer stack__layer--1"></div>
+                  <div className="stack__layer stack__layer--2"></div>
+                  <div className="stack__layer stack__layer--3"></div>
+                </div>
               </div>
-            </div>
-            <div className="logo__text">
-              <h1 className="logo__title">STACKS</h1>
-              <span className="logo__subtitle">TECHNOLOGIES</span>
-            </div>
+              <div className="logo__text">
+                <h1 className="logo__title">STACKS</h1>
+                <span className="logo__subtitle">TECHNOLOGIES</span>
+              </div>
+            </Link>
           </div>
 
           {/* Navigation Menu */}
           <nav className="header__nav">
             <ul className="nav__list">
               <li className="nav__item">
-                <a href="#home" className="nav__link nav__link--active">
+                <Link 
+                  to="/home" 
+                  className={`nav__link ${isActiveRoute('/home') || isActiveRoute('/') ? 'nav__link--active' : ''}`}
+                >
                   HOME
-                </a>
+                </Link>
               </li>
               <li className="nav__item">
-                <a href="#pre-built" className="nav__link">
+                <Link 
+                  to="/prebuilt" 
+                  className={`nav__link ${isActiveRoute('/prebuilt') ? 'nav__link--active' : ''}`}
+                >
                   PRE-BUILT SYSTEM
-                </a>
+                </Link>
               </li>
               <li className="nav__item">
-                <a href="#configurator" className="nav__link">
+                <Link 
+                  to="/custom" 
+                  className={`nav__link ${isActiveRoute('/custom') ? 'nav__link--active' : ''}`}
+                >
                   CUSTOM BUILD CONFIGURATOR
-                </a>
+                </Link>
               </li>
               <li className="nav__item">
-                <a href="#accessories" className="nav__link">
+                <Link 
+                  to="/accessories" 
+                  className={`nav__link ${isActiveRoute('/accessories') ? 'nav__link--active' : ''}`}
+                >
                   ACCESSORIES
-                </a>
+                </Link>
               </li>
             </ul>
           </nav>

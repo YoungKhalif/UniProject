@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Checkout.css';
 
 // Order data from cart - moved outside component
@@ -25,6 +26,7 @@ const orderData = {
 const Checkout = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [shippingMethod, setShippingMethod] = useState('standard');
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     // Shipping Information
     firstName: '',
@@ -145,7 +147,7 @@ const Checkout = () => {
 
   const handleBackToCart = () => {
     console.log('Back to cart clicked');
-    // Navigate back to cart
+    navigate('/cart');
   };
 
   const handlePlaceOrder = async () => {

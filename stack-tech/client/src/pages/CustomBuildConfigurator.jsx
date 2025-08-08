@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Header from '../component/Header';
+import Footer from '../component/Footer';
 import './CustomBuildConfigurator.css';
 
 const CustomBuildConfigurator = () => {
@@ -13,8 +16,66 @@ const CustomBuildConfigurator = () => {
     case: null,
     cooling: null
   });
-  const [totalPrice, setTotalPrice] = useState(0);
-  const [expandedSection, setExpandedSection] = useState('cpu');
+  const [totalPrice, setTotalPrice] = useState(5089.00);
+  const [performanceRating, setPerformanceRating] = useState(85);
+  const [compatibilityScore, setCompatibilityScore] = useState(95);
+  const [selectedCategory, setSelectedCategory] = useState('cpu');
+  const navigate = useNavigate();
+
+  const componentData = {
+    cpu: [
+      {
+        id: 1,
+        name: "Intel Core i9-13700KF - 8-Core 4.6GHz",
+        price: 800.00,
+        image: "https://images.unsplash.com/photo-1591488320449-011701bb6704?w=300&h=200&fit=crop&crop=center",
+        specs: ["8 Cores / 16 Threads", "Base: 3.4GHz, Boost: 4.6GHz", "30MB L3 Cache", "LGA 1700 Socket"],
+        compatible: true
+      },
+      {
+        id: 2,
+        name: "AMD Ryzen 3 4100 - Quad-Core Budget Option",
+        price: 675.00,
+        image: "https://images.unsplash.com/photo-1555617981-dac3880eac6e?w=300&h=200&fit=crop&crop=center",
+        specs: ["4 Cores / 8 Threads", "Base: 3.8GHz, Boost: 4.0GHz", "4MB L3 Cache", "AM4 Socket"],
+        compatible: true
+      },
+      {
+        id: 3,
+        name: "Intel Pentium Gold G7400 - Budget Dual-Core CPU",
+        price: 699.99,
+        image: "https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=300&h=200&fit=crop&crop=center",
+        specs: ["2 Cores / 4 Threads", "Base: 3.7GHz", "4MB L3 Cache", "LGA 1700 Socket"],
+        compatible: true
+      }
+    ],
+    motherboard: [
+      {
+        id: 1,
+        name: "ASUS Prime B660M A D4 - Micro-ATX, LGA1700",
+        price: 2099.00,
+        image: "https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=300&h=200&fit=crop&crop=center",
+        specs: ["LGA 1700 Socket", "DDR4 Memory", "PCIe 5.0 x16", "USB 3.2 Gen 2"],
+        compatible: true
+      },
+      {
+        id: 2,
+        name: "Gigabyte B760 Gaming X AX - LGA1700, Wi-Fi 6",
+        price: 597.00,
+        image: "https://images.unsplash.com/photo-1591238371432-37633bfe69ae?w=300&h=200&fit=crop&crop=center",
+        specs: ["LGA 1700 Socket", "DDR5 Memory", "WiFi 6E", "RGB Lighting"],
+        compatible: true
+      },
+      {
+        id: 3,
+        name: "MSI MAG B660M Mortar - LGA1700, DDR4 Support",
+        price: 800.99,
+        image: "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=300&h=200&fit=crop&crop=center",
+        specs: ["LGA 1700 Socket", "DDR4 Memory", "PCIe 5.0", "USB-C Header"],
+        compatible: true
+      }
+    ]
+  };
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -32,371 +93,165 @@ const CustomBuildConfigurator = () => {
     setTotalPrice(total);
   }, [selectedComponents]);
 
-  const steps = [
-    { id: 'cpu', name: 'CPU', icon: '⚡' },
-    { id: 'motherboard', name: 'Motherboard', icon: '🔌' },
-    { id: 'gpu', name: 'GPU', icon: '🎮' },
-    { id: 'ram', name: 'RAM', icon: '💾' },
-    { id: 'storage', name: 'Storage', icon: '💿' },
-    { id: 'psu', name: 'PSU', icon: '🔋' },
-    { id: 'case', name: 'Case', icon: '📦' },
-    { id: 'cooling', name: 'Cooling', icon: '❄️' }
-  ];
-
-  const componentData = {
-    cpu: [
-      {
-        id: 1,
-        name: "Intel Core i5-13400F - 6-Core 4.6GHz",
-        price: 200.00,
-        image: "/api/placeholder/80/80",
-        specs: ["6 Cores / 12 Threads", "Base: 2.5GHz, Boost: 4.6GHz", "20MB L3 Cache", "LGA 1700 Socket"],
-        compatible: true
-      },
-      {
-        id: 2,
-        name: "AMD Ryzen 5 4700 - Octa-Core Budget Option",
-        price: 179.00,
-        image: "/api/placeholder/80/80",
-        specs: ["8 Cores / 8 Threads", "Base: 3.6GHz, Boost: 4.0GHz", "8MB L3 Cache", "AM4 Socket"],
-        compatible: true
-      },
-      {
-        id: 3,
-        name: "Intel Pentium Gold G7400 - Budget Dual-Core CPU",
-        price: 89.99,
-        image: "/api/placeholder/80/80",
-        specs: ["2 Cores / 4 Threads", "Base: 3.7GHz", "4MB L3 Cache", "LGA 1700 Socket"],
-        compatible: true
-      }
-    ],
-    motherboard: [
-      {
-        id: 1,
-        name: "ASUS Prime B660M-A D4 - Micro-ATX, LGA1700",
-        price: 129.99,
-        image: "/api/placeholder/80/80",
-        specs: ["LGA 1700 Socket", "DDR4 Memory", "PCIe 5.0 x16", "USB 3.2 Gen 2"],
-        compatible: true
-      },
-      {
-        id: 2,
-        name: "Gigabyte B760 Gaming X AX - LGA1700, WiFi 6",
-        price: 159.99,
-        image: "/api/placeholder/80/80",
-        specs: ["LGA 1700 Socket", "DDR5 Memory", "WiFi 6E", "RGB Lighting"],
-        compatible: true
-      },
-      {
-        id: 3,
-        name: "MSI MAG B660M Mortar - LGA1700, DDR4 Support",
-        price: 149.99,
-        image: "/api/placeholder/80/80",
-        specs: ["LGA 1700 Socket", "DDR4 Memory", "PCIe 5.0", "USB-C Header"],
-        compatible: true
-      }
-    ],
-    gpu: [
-      {
-        id: 1,
-        name: "NVIDIA GeForce RTX 4060 Ti - 16GB GDDR6X",
-        price: 499.99,
-        image: "/api/placeholder/80/80",
-        specs: ["16GB GDDR6X", "128-bit Memory Bus", "2535 MHz Boost Clock", "DLSS 3.0"],
-        compatible: true
-      },
-      {
-        id: 2,
-        name: "AMD Radeon RX 7600 - 8GB GDDR6",
-        price: 299.99,
-        image: "/api/placeholder/80/80",
-        specs: ["8GB GDDR6", "128-bit Memory Bus", "2655 MHz Game Clock", "Ray Tracing"],
-        compatible: true
-      },
-      {
-        id: 3,
-        name: "NVIDIA GeForce RTX 4070 - 12GB GDDR6X",
-        price: 599.99,
-        image: "/api/placeholder/80/80",
-        specs: ["12GB GDDR6X", "192-bit Memory Bus", "2475 MHz Boost Clock", "AV1 Encoding"],
-        compatible: true
-      }
-    ],
-    ram: [
-      {
-        id: 1,
-        name: "Corsair Vengeance LPX 16GB DDR4-3200",
-        price: 79.99,
-        image: "/api/placeholder/80/80",
-        specs: ["16GB Kit (2x8GB)", "DDR4-3200", "CL16 Latency", "Black Heat Spreader"],
-        compatible: true
-      },
-      {
-        id: 2,
-        name: "G.Skill Ripjaws V 32GB DDR4-3600",
-        price: 139.99,
-        image: "/api/placeholder/80/80",
-        specs: ["32GB Kit (2x16GB)", "DDR4-3600", "CL16 Latency", "Red Heat Spreader"],
-        compatible: true
-      }
-    ],
-    storage: [
-      {
-        id: 1,
-        name: "Samsung 970 EVO Plus 1TB NVMe SSD",
-        price: 89.99,
-        image: "/api/placeholder/80/80",
-        specs: ["1TB Capacity", "NVMe M.2", "3,500 MB/s Read", "5 Year Warranty"],
-        compatible: true
-      },
-      {
-        id: 2,
-        name: "WD Black SN850X 2TB NVMe SSD",
-        price: 199.99,
-        image: "/api/placeholder/80/80",
-        specs: ["2TB Capacity", "NVMe M.2", "7,300 MB/s Read", "Game Mode"],
-        compatible: true
-      }
-    ],
-    psu: [
-      {
-        id: 1,
-        name: "Corsair RM750x 750W 80+ Gold Modular",
-        price: 129.99,
-        image: "/api/placeholder/80/80",
-        specs: ["750W Power", "80+ Gold Certified", "Fully Modular", "10 Year Warranty"],
-        compatible: true
-      }
-    ],
-    case: [
-      {
-        id: 1,
-        name: "Fractal Design Core 1000 Micro ATX Case",
-        price: 49.99,
-        image: "/api/placeholder/80/80",
-        specs: ["Micro ATX Support", "2x USB 3.0", "Tool-free Installation", "Cable Management"],
-        compatible: true
-      }
-    ],
-    cooling: [
-      {
-        id: 1,
-        name: "Cooler Master Hyper 212 RGB Black Edition",
-        price: 49.99,
-        image: "/api/placeholder/80/80",
-        specs: ["Direct Contact Heatpipes", "RGB Lighting", "120mm Fan", "Universal Socket"],
-        compatible: true
-      }
-    ]
-  };
-
-  const handleComponentSelect = (componentType, component) => {
+  const handleComponentSelect = (category, component) => {
     setSelectedComponents(prev => ({
       ...prev,
-      [componentType]: component
+      [category]: component
     }));
+    
+    // Update performance and compatibility scores based on selection
+    setPerformanceRating(prev => Math.min(100, prev + 5));
+    setCompatibilityScore(prev => Math.max(90, prev - 1));
   };
 
-  const handleSectionToggle = (sectionId) => {
-    setExpandedSection(expandedSection === sectionId ? null : sectionId);
+  const handleCategorySelect = (category) => {
+    setSelectedCategory(category);
   };
 
-  const formatPrice = (price) => {
-    return `$${price.toFixed(2)}`;
+  const handleAddToCart = () => {
+    // Navigate to cart with selected build
+    navigate('/cart', { state: { customBuild: selectedComponents, totalPrice } });
   };
 
-  const getCompatibilityStatus = (component) => {
-    // This would contain actual compatibility logic
-    return component.compatible ? 'compatible' : 'incompatible';
-  };
-
-  return (
-    <div className={`custom-build-configurator ${isVisible ? 'configurator--visible' : ''}`}>
-      {/* Header */}
-      <div className="configurator-header">
-        <div className="configurator-header__container">
-          <h1 className="configurator-title">
-            <span className="title-line">Custom Build</span>
-            <span className="title-line title-line--accent">Configurator</span>
-          </h1>
-          
-          {/* Progress Steps */}
-          <div className="progress-steps">
-            {steps.map((step) => (
-              <div 
-                key={step.id}
-                className={`progress-step ${selectedComponents[step.id] ? 'progress-step--completed' : ''} ${expandedSection === step.id ? 'progress-step--active' : ''}`}
-              >
-                <div className="step-icon">{step.icon}</div>
-                <span className="step-name">{step.name}</span>
-              </div>
-            ))}
-          </div>
+  const renderComponentCard = (component, category) => (
+    <div 
+      key={component.id} 
+      className={`component-card ${selectedComponents[category]?.id === component.id ? 'selected' : ''}`}
+      onClick={() => handleComponentSelect(category, component)}
+    >
+      <div className="component-image">
+        <img src={component.image} alt={component.name} />
+      </div>
+      <div className="component-info">
+        <h4>{component.name}</h4>
+        <div className="component-specs">
+          {component.specs.map((spec, index) => (
+            <span key={index} className="spec-item">{spec}</span>
+          ))}
         </div>
       </div>
+      <div className="component-price">
+        R{component.price.toFixed(2)}
+      </div>
+      <button className="add-product-btn">
+        {selectedComponents[category]?.id === component.id ? '✓' : '+'}
+      </button>
+      <div className={`compatibility-badge ${component.compatible ? 'compatible' : 'incompatible'}`}>
+        {component.compatible ? '✓ Compatible' : '⚠ Incompatible'}
+      </div>
+    </div>
+  );
 
-      {/* Main Content */}
-      <div className="configurator-content">
-        <div className="configurator-container">
-          {/* Left Side - Component Selection */}
-          <div className="component-selection">
-            {Object.entries(componentData).map(([componentType, components]) => (
-              <div 
-                key={componentType}
-                className={`component-section ${expandedSection === componentType ? 'component-section--expanded' : ''}`}
-              >
-                <div 
-                  className="component-section-header"
-                  onClick={() => handleSectionToggle(componentType)}
-                >
-                  <h3 className="section-title">
-                    Select your {componentType.toUpperCase()}
-                  </h3>
-                  <div className="section-toggle">
-                    <span className="toggle-icon">
-                      {expandedSection === componentType ? '−' : '+'}
-                    </span>
+  return (
+    <div className="custom-build-configurator">
+      <Header />
+      
+      {/* Top Navigation Bar */}
+      <div className="build-nav-bar">
+        <div className="build-stats">
+          <div className="stat-item">
+            <span className="stat-label">Total Price:</span>
+            <span className="stat-value">R{totalPrice.toFixed(2)}</span>
+          </div>
+          <div className="stat-item">
+            <span className="stat-label">Performance:</span>
+            <span className="stat-value">{performanceRating}/100</span>
+          </div>
+          <div className="stat-item">
+            <span className="stat-label">Compatibility:</span>
+            <span className="stat-value">{compatibilityScore}%</span>
+          </div>
+        </div>
+        <button className="add-to-cart-btn" onClick={handleAddToCart}>
+          Add Build to Cart
+        </button>
+      </div>
+
+      <div className={`configurator-container ${isVisible ? 'visible' : ''}`}>
+        {/* Left Sidebar - Component Categories */}
+        <div className="component-categories">
+          <h3>Build Components</h3>
+          {Object.keys(componentData).map((category) => (
+            <div 
+              key={category}
+              className={`category-item ${selectedCategory === category ? 'active' : ''}`}
+              onClick={() => handleCategorySelect(category)}
+            >
+              <div className="category-icon">
+                {category === 'cpu' && '🔧'}
+                {category === 'motherboard' && '🔲'}
+              </div>
+              <span className="category-name">
+                {category.toUpperCase().replace('_', ' ')}
+              </span>
+              {selectedComponents[category] && (
+                <div className="selected-indicator">✓</div>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* Main Content Area */}
+        <div className="component-selection-area">
+          <div className="section-header">
+            <h2>Select {selectedCategory.toUpperCase()}</h2>
+            <p>Choose the best {selectedCategory} for your build</p>
+          </div>
+
+          <div className="components-grid">
+            {componentData[selectedCategory]?.map((component) => 
+              renderComponentCard(component, selectedCategory)
+            )}
+          </div>
+        </div>
+
+        {/* Right Sidebar - Build Summary */}
+        <div className="build-summary">
+          <h3>Your Build</h3>
+          <div className="selected-components">
+            {Object.entries(selectedComponents).map(([category, component]) => (
+              <div key={category} className="summary-item">
+                <div className="summary-category">{category.toUpperCase()}</div>
+                {component ? (
+                  <div className="summary-component">
+                    <div className="summary-name">{component.name}</div>
+                    <div className="summary-price">R{component.price.toFixed(2)}</div>
                   </div>
-                </div>
-
-                {expandedSection === componentType && (
-                  <div className="component-list">
-                    <div className="component-list-header">
-                      <span className="header-product">Product</span>
-                      <span className="header-view">View</span>
-                      <span className="header-price">Price</span>
-                      <span className="header-add">Add/Select</span>
-                    </div>
-
-                    {components.map((component) => (
-                      <div 
-                        key={component.id}
-                        className={`component-item ${selectedComponents[componentType]?.id === component.id ? 'component-item--selected' : ''}`}
-                      >
-                        <div className="component-image">
-                          <img 
-                            src={component.image} 
-                            alt={component.name}
-                            className="item-image"
-                          />
-                        </div>
-
-                        <div className="component-info">
-                          <h4 className="component-name">{component.name}</h4>
-                          <div className="component-specs">
-                            {component.specs.map((spec, index) => (
-                              <span key={index} className="spec-item">
-                                {spec}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-
-                        <div className="component-view">
-                          <button className="btn btn--view">View</button>
-                        </div>
-
-                        <div className="component-price">
-                          <span className="price-amount">{formatPrice(component.price)}</span>
-                        </div>
-
-                        <div className="component-add">
-                          <button 
-                            className={`btn btn--add ${selectedComponents[componentType]?.id === component.id ? 'btn--selected' : ''}`}
-                            onClick={() => handleComponentSelect(componentType, component)}
-                          >
-                            {selectedComponents[componentType]?.id === component.id ? (
-                              <span className="add-icon">✓</span>
-                            ) : (
-                              <span className="add-icon">+</span>
-                            )}
-                          </button>
-                        </div>
-
-                        <div className="component-compatibility">
-                          <div className={`compatibility-indicator compatibility-indicator--${getCompatibilityStatus(component)}`}>
-                            {getCompatibilityStatus(component) === 'compatible' ? '✓' : '✗'}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+                ) : (
+                  <div className="summary-empty">Not selected</div>
                 )}
               </div>
             ))}
           </div>
 
-          {/* Right Side - Build Summary */}
-          <div className="build-summary">
-            <div className="summary-card">
-              <div className="summary-header">
-                <h3 className="summary-title">Your Build</h3>
-                <div className="total-price">
-                  <span className="price-label">Total Price:</span>
-                  <span className="price-amount">{formatPrice(totalPrice)}</span>
+          <div className="build-total">
+            <div className="total-line">
+              <span>Total: R{totalPrice.toFixed(2)}</span>
+            </div>
+            <div className="performance-bars">
+              <div className="performance-item">
+                <span>Performance</span>
+                <div className="progress-bar">
+                  <div 
+                    className="progress-fill" 
+                    style={{width: `${performanceRating}%`}}
+                  ></div>
                 </div>
+                <span>{performanceRating}%</span>
               </div>
-
-              <div className="summary-tabs">
-                <button className="tab-button tab-button--active">Your Build</button>
-                <button className="tab-button">Performance Summary</button>
-                <button className="tab-button">Compatibility</button>
-                <button className="tab-button">Save Configuration</button>
-              </div>
-
-              <div className="selected-components">
-                {Object.entries(selectedComponents).map(([componentType, component]) => (
-                  <div key={componentType} className="selected-component">
-                    <div className="component-type">
-                      {componentType.toUpperCase()}
-                    </div>
-                    <div className="component-details">
-                      {component ? (
-                        <>
-                          <span className="component-name">{component.name}</span>
-                          <span className="component-price">{formatPrice(component.price)}</span>
-                        </>
-                      ) : (
-                        <span className="component-placeholder">Not selected</span>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div className="summary-actions">
-                <button className="btn btn--primary btn--large">Add to Cart</button>
-                <button className="btn btn--secondary btn--large">Save Configuration</button>
-                <button className="btn btn--tertiary btn--large">Get Quote</button>
+              <div className="performance-item">
+                <span>Compatibility</span>
+                <div className="progress-bar">
+                  <div 
+                    className="progress-fill compatibility" 
+                    style={{width: `${compatibilityScore}%`}}
+                  ></div>
+                </div>
+                <span>{compatibilityScore}%</span>
               </div>
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Footer */}
-      <footer className="configurator-footer">
-        <div className="footer-container">
-          <div className="footer-brand">
-            <h4>Stack Technologies</h4>
-          </div>
-          <div className="footer-social">
-            <a href="#" className="social-link">📧</a>
-            <a href="#" className="social-link">📘</a>
-            <a href="#" className="social-link">🐦</a>
-          </div>
-          <div className="footer-info">
-            <p>Contact Us</p>
-            <p>Custom PC Builder</p>
-            <p>Phone: (555) 123-4567</p>
-          </div>
-        </div>
-      </footer>
-
-      {/* Background Elements */}
-      <div className="page-background">
-        <div className="bg-element bg-element--1"></div>
-        <div className="bg-element bg-element--2"></div>
       </div>
     </div>
   );
