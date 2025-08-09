@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import './css/Login.css';
 
 const Login = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     emailOrUsername: '',
     password: ''
@@ -13,6 +15,7 @@ const Login = () => {
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [serverError, setServerError] = useState('');
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -59,34 +62,40 @@ const Login = () => {
     }
 
     setIsLoading(true);
+    setServerError('');
+    setErrors({});
     
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Here you would typically make an API call to your backend
-      console.log('Login data:', { ...formData, rememberMe });
-      
-      // Reset form on success
-      setFormData({
-        emailOrUsername: '',
-        password: ''
+      // Call the login function from AuthContext
+      await login({ 
+        emailOrUsername: formData.emailOrUsername, // Our backend will handle both email and username
+        password: formData.password 
       });
-      setRememberMe(false);
       
-      // Navigate to home page after successful login
-      navigate('/home');
+      // If login succeeds, navigate to home page
+      navigate('/');
+      
+      // Store remember me preference if needed
+      if (rememberMe) {
+        localStorage.setItem('rememberMe', 'true');
+      } else {
+        localStorage.removeItem('rememberMe');
+      }
     } catch (error) {
       console.error('Login error:', error);
-      setErrors({ general: 'Invalid credentials. Please try again.' });
+      
+      if (error.response && error.response.data && error.response.data.msg) {
+        setServerError(error.response.data.msg);
+      } else {
+        setServerError('Invalid credentials. Please try again.');
+      }
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleForgotPassword = () => {
-    // Handle forgot password logic
-    alert('Password reset link sent to your email!');
+    navigate('/forgot-password');
   };
 
   const handleGoogleLogin = () => {
@@ -113,10 +122,15 @@ const Login = () => {
               </p>
             </div>
 
-            {/* General Error Message */}
-            {errors.general && (
+            {/* Server Error Message */}
+            {serverError && (
               <div className="login__error-banner">
-                {errors.general}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="8" x2="12" y2="12"></line>
+                  <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+                <span>{serverError}</span>
               </div>
             )}
 

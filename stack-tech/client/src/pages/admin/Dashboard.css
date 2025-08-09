@@ -1,0 +1,222 @@
+/* Admin Dashboard Styles */
+:root {
+  --admin-primary: #4A7C59;
+  --admin-secondary: #6B8E23;
+  --admin-danger: #dc3545;
+  --admin-warning: #ffc107;
+  --admin-success: #28a745;
+  --admin-light: #f8f9fa;
+  --admin-dark: #343a40;
+  --admin-gray: #6c757d;
+  --admin-border: #dee2e6;
+}
+
+.admin-dashboard {
+  min-height: 100vh;
+  background-color: #f8f8f0;
+  color: #333;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Header */
+.admin-header {
+  background-color: var(--admin-primary);
+  color: white;
+  padding: 2rem;
+  text-align: center;
+}
+
+.admin-header h1 {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.admin-header p {
+  margin: 0.5rem 0 0;
+  opacity: 0.8;
+}
+
+/* Layout */
+.admin-content {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  min-height: calc(100vh - 140px);
+}
+
+/* Sidebar */
+.admin-sidebar {
+  background-color: white;
+  border-right: 1px solid var(--admin-border);
+  padding: 1rem 0;
+}
+
+.admin-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.admin-nav li {
+  padding: 0;
+}
+
+.admin-nav a {
+  display: block;
+  padding: 0.75rem 1.5rem;
+  color: var(--admin-dark);
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.admin-nav a:hover {
+  background-color: rgba(74, 124, 89, 0.1);
+  color: var(--admin-primary);
+}
+
+.admin-nav li.active a {
+  background-color: rgba(74, 124, 89, 0.2);
+  color: var(--admin-primary);
+  border-left: 4px solid var(--admin-primary);
+}
+
+/* Main Content */
+.admin-main {
+  padding: 2rem;
+}
+
+.admin-section {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  margin-bottom: 2rem;
+  overflow: hidden;
+}
+
+.admin-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--admin-border);
+}
+
+.admin-section-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+/* Table */
+.admin-table-container {
+  overflow-x: auto;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--admin-border);
+}
+
+.admin-table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: var(--admin-gray);
+}
+
+.product-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.product-thumbnail {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 4px;
+  background-color: #f8f9fa;
+}
+
+.stock-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.stock-badge.in-stock {
+  background-color: rgba(40, 167, 69, 0.1);
+  color: var(--admin-success);
+}
+
+.stock-badge.low-stock {
+  background-color: rgba(255, 193, 7, 0.1);
+  color: var(--admin-warning);
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* Buttons */
+.admin-button {
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.admin-button.primary {
+  background-color: var(--admin-primary);
+  color: white;
+}
+
+.admin-button.primary:hover {
+  background-color: #3e6a4b;
+}
+
+.admin-button.danger {
+  background-color: var(--admin-danger);
+  color: white;
+}
+
+.admin-button.danger:hover {
+  background-color: #c82333;
+}
+
+.admin-button.small {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.85rem;
+}
+
+/* Loading and Error States */
+.admin-loading,
+.admin-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+}
+
+.admin-error {
+  color: var(--admin-danger);
+}
+
+.no-data {
+  text-align: center;
+  padding: 2rem;
+  color: var(--admin-gray);
+}

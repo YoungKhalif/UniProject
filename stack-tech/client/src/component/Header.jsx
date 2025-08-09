@@ -1,11 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import AuthLinks from './AuthLinks';
 import './css/Header.css';
 
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const { user, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const dropdownRef = useRef(null);
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
@@ -13,17 +18,35 @@ const Header = () => {
     // You can implement search functionality here
   };
 
-  const handleLoginClick = () => {
-    navigate('/login');
+  // Removed unused handler functions for login/signup as they're now handled by AuthLinks
+
+  const handleLogout = () => {
+    logout();
+    setDropdownOpen(false);
+    navigate('/');
   };
 
-  const handleSignUpClick = () => {
-    navigate('/signup');
+  const toggleDropdown = () => {
+    setDropdownOpen(!dropdownOpen);
   };
 
   const isActiveRoute = (path) => {
     return location.pathname === path;
   };
+  
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    }
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [dropdownRef]);
 
   return (
     <header className="header">
@@ -50,20 +73,44 @@ const Header = () => {
               </form>
             </div>
 
-            {/* Auth Buttons */}
+            {/* Auth Buttons or User Profile */}
             <div className="header__auth">
-              <button 
-                className="auth__button auth__button--login"
-                onClick={handleLoginClick}
-              >
-                Login
-              </button>
-              <button 
-                className="auth__button auth__button--signup"
-                onClick={handleSignUpClick}
-              >
-                Sign Up
-              </button>
+              {isAuthenticated ? (
+                <div className="user-profile" ref={dropdownRef}>
+                  <div className="user-profile__container" onClick={toggleDropdown}>
+                    <div className="user-avatar">
+                      {user?.firstName?.charAt(0) || user?.username?.charAt(0) || '?'}
+                    </div>
+                    <span className="user-name">
+                      {user?.firstName || user?.username || 'User'}
+                    </span>
+                    <svg className={`dropdown-arrow ${dropdownOpen ? 'open' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                      <path d="m6 9 6 6 6-6"></path>
+                    </svg>
+                  </div>
+                  
+                  {dropdownOpen && (
+                    <div className="user-dropdown">
+                      {user?.role === 'admin' && (
+                        <Link to="/admin" className="dropdown-item">
+                          Admin Dashboard
+                        </Link>
+                      )}
+                      <Link to="/profile" className="dropdown-item">
+                        My Profile
+                      </Link>
+                      <Link to="/orders" className="dropdown-item">
+                        My Orders
+                      </Link>
+                      <button className="dropdown-item logout-btn" onClick={handleLogout}>
+                        Logout
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <AuthLinks />
+              )}
             </div>
           </div>
         </div>

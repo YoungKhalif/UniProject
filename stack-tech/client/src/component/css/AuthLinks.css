@@ -1,0 +1,49 @@
+/* AuthLinks.css */
+.auth-links {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.auth-links__login,
+.auth-links__signup {
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+}
+
+.auth-links__login {
+  color: var(--color-violet-accent);
+}
+
+.auth-links__login:hover {
+  color: var(--color-violet-accent-dark);
+  background-color: rgba(165, 153, 181, 0.1);
+}
+
+.auth-links__signup {
+  background-color: var(--color-violet-accent);
+  color: white;
+}
+
+.auth-links__signup:hover {
+  background-color: var(--color-violet-accent-dark);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .auth-links__login,
+  .auth-links__signup {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-links {
+    gap: 0.5rem;
+  }
+}

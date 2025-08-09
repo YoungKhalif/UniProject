@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { authService } from '../services/api';
 import './css/SignUp.css';
 
 const SignUp = () => {
   const navigate = useNavigate();
+  const { register } = useAuth();
   const [formData, setFormData] = useState({
     email: '',
     username: '',
@@ -18,6 +21,7 @@ const SignUp = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [serverError, setServerError] = useState('');
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -88,13 +92,13 @@ const SignUp = () => {
     }
 
     setIsLoading(true);
+    setServerError('');
     
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      const { confirmPassword, ...userData } = formData;
       
-      // Here you would typically make an API call to your backend
-      console.log('Sign up data:', formData);
+      // Register the user using our auth service
+      await register(userData);
       
       // Reset form on success
       setFormData({
@@ -107,11 +111,16 @@ const SignUp = () => {
         confirmPassword: ''
       });
       
-      // Navigate to login page after successful signup
-      navigate('/login');
+      // Navigate to home page after successful signup and auto-login
+      navigate('/');
     } catch (error) {
       console.error('Sign up error:', error);
-      alert('An error occurred during sign up. Please try again.');
+      
+      if (error.response && error.response.data && error.response.data.msg) {
+        setServerError(error.response.data.msg);
+      } else {
+        setServerError('An error occurred during sign up. Please try again.');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -329,6 +338,18 @@ const SignUp = () => {
                 </label>
               </div>
 
+              {/* Server Error Message */}
+              {serverError && (
+                <div className="form__server-error">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                  </svg>
+                  <span>{serverError}</span>
+                </div>
+              )}
+              
               {/* Submit Button */}
               <button
                 type="submit"
