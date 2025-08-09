@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { authService } from '../services/api';
+import { useAuth } from '../context/AuthContext';
 import Header from './Header';
 import './css/ResetPassword.css';
 
 const ResetPassword = () => {
   const { token } = useParams();
-  // No longer need navigate as we're using Link components
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -23,6 +25,14 @@ const ResetPassword = () => {
     number: true,
     special: true
   });
+
+  // Redirect authenticated users away from reset password page
+  useEffect(() => {
+    if (isAuthenticated) {
+      // If user is already logged in, redirect to home
+      navigate('/', { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
 
   useEffect(() => {
     // Check if token is valid

@@ -1,11 +1,21 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './css/Login.css';
 
 const Login = () => {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const location = useLocation();
+  const { login, isAuthenticated } = useAuth();
+  
+  // Redirect authenticated users away from login page
+  useEffect(() => {
+    if (isAuthenticated) {
+      // If user is already logged in, redirect to home or intended page
+      const from = location.state?.from?.pathname || '/';
+      navigate(from, { replace: true });
+    }
+  }, [isAuthenticated, navigate, location]);
   const [formData, setFormData] = useState({
     emailOrUsername: '',
     password: ''
@@ -72,8 +82,9 @@ const Login = () => {
         password: formData.password 
       });
       
-      // If login succeeds, navigate to home page
-      navigate('/');
+      // If login succeeds, navigate to intended page or home
+      const from = location.state?.from?.pathname || '/';
+      navigate(from, { replace: true });
       
       // Store remember me preference if needed
       if (rememberMe) {

@@ -1,0 +1,92 @@
+.unauthorized-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  background-color: #f7f8fa;
+}
+
+.unauthorized-content {
+  text-align: center;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+  max-width: 600px;
+  width: 100%;
+}
+
+.unauthorized-icon {
+  font-size: 4rem;
+  color: #d9534f;
+  margin-bottom: 20px;
+}
+
+.unauthorized-content h1 {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.unauthorized-message {
+  font-size: 1.2rem;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.unauthorized-details {
+  color: #777;
+  margin-bottom: 30px;
+}
+
+.unauthorized-actions {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.primary-btn,
+.secondary-btn {
+  padding: 12px 24px;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.primary-btn {
+  background-color: #3498db;
+  color: white;
+  border: none;
+}
+
+.primary-btn:hover {
+  background-color: #2980b9;
+}
+
+.secondary-btn {
+  background-color: transparent;
+  color: #3498db;
+  border: 2px solid #3498db;
+}
+
+.secondary-btn:hover {
+  background-color: rgba(52, 152, 219, 0.1);
+}
+
+/* Add responsive styles */
+@media (max-width: 768px) {
+  .unauthorized-content {
+    padding: 30px 20px;
+  }
+  
+  .unauthorized-actions {
+    flex-direction: column;
+  }
+}

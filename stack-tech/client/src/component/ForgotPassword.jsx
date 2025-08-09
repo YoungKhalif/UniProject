@@ -1,16 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { authService } from '../services/api';
+import { useAuth } from '../context/AuthContext';
 import './css/ForgotPassword.css';
 import Header from './Header';
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState('');
   const [isVisible, setIsVisible] = useState(false);
+
+  // Redirect authenticated users away from forgot password page
+  useEffect(() => {
+    if (isAuthenticated) {
+      // If user is already logged in, redirect to home
+      navigate('/', { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
 
   useEffect(() => {
     setTimeout(() => setIsVisible(true), 100);
