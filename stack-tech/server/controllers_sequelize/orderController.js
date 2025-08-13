@@ -1,5 +1,6 @@
 // controllers_sequelize/orderController.js
 const { Order, OrderItem, Product, User } = require('../models_sequelize');
+const emailService = require('../services/emailService');
 
 exports.getAllOrders = async (req, res) => {
   try {
@@ -60,8 +61,19 @@ exports.updateOrderStatus = async (req, res) => {
     if (!updated) return res.status(404).json({ message: 'Order not found' });
     
     const updatedOrder = await Order.findByPk(req.params.id, {
-      include: [{ model: User, attributes: ['name', 'email'] }]
+      include: [{ model: User, attributes: ['name', 'email', 'firstName', 'username'] }]
     });
+
+    // Send email notification based on status
+    if (status === 'shipped') {
+      const trackingInfo = {
+        trackingNumber: 'ST' + Math.random().toString(36).substr(2, 9).toUpperCase(),
+        carrier: 'FedEx',
+        estimatedDelivery: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toLocaleDateString()
+      };
+      
+      await emailService.sendShippingNotification(updatedOrder, updatedOrder.User, trackingInfo);
+    }
     
     res.json(updatedOrder);
   } catch (error) {
@@ -93,8 +105,24 @@ exports.createOrder = async (req, res) => {
         price: product.price
       });
     }));
+
+    // Get user details and order items with product info for email
+    const user = await User.findByPk(userId);
+    const orderWithItems = await Order.findByPk(order.id, {
+      include: [{
+        model: OrderItem,
+        include: [{ model: Product, attributes: ['name', 'price'] }]
+      }]
+    });
+
+    // Send order confirmation email
+    await emailService.sendOrderConfirmation(order, user, orderWithItems.OrderItems);
     
-    res.status(201).json({ order, orderItems });
+    res.status(201).json({ 
+      order, 
+      orderItems,
+      message: 'Order created successfully! Confirmation email sent.' 
+    });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }

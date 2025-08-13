@@ -11,6 +11,8 @@ import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
 import Dashboard from './pages/admin/Dashboard';
 import Unauthorized from './pages/Unauthorized';
+import NotificationDemo from './pages/NotificationDemo';
+import EmailVerification from './pages/EmailVerification';
 
 // Auth Components
 import SignUp from './component/SignUp';
@@ -21,6 +23,7 @@ import ResetPassword from './component/ResetPassword';
 // Other Components
 import ProductList from './component/ProductList';
 import { AuthProvider } from './context/AuthContext';
+import { NotificationProvider } from './component/NotificationSystem';
 import ProtectedRoute from './component/ProtectedRoute';
 import PublicRoute from './component/PublicRoute';
 import useRouteGuard from './hooks/useRouteGuard';
@@ -101,12 +104,24 @@ function AppContent() {
             <ResetPassword />
           </PublicRoute>
         } />
+        <Route path="/verify-email/:token" element={
+          <PublicRoute>
+            <EmailVerification />
+          </PublicRoute>
+        } />
         <Route path="/unauthorized" element={<Unauthorized />} />
         
         {/* Admin Routes */}
         <Route path="/admin" element={
           <ProtectedRoute adminOnly={true}>
             <Dashboard />
+          </ProtectedRoute>
+        } />
+        
+        {/* Demo Route for Testing Notifications and Email System */}
+        <Route path="/demo" element={
+          <ProtectedRoute>
+            <NotificationDemo />
           </ProtectedRoute>
         } />
 
@@ -120,9 +135,11 @@ function AppContent() {
 function App() {
   return (
     <AuthProvider>
-      <Router>
-        <AppContent />
-      </Router>
+      <NotificationProvider>
+        <Router>
+          <AppContent />
+        </Router>
+      </NotificationProvider>
     </AuthProvider>
   );
 }

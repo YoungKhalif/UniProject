@@ -23,6 +23,7 @@ const SignUp = () => {
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [serverError, setServerError] = useState('');
+  const [registrationSuccess, setRegistrationSuccess] = useState(false);
 
   // Redirect authenticated users away from signup page
   useEffect(() => {
@@ -106,8 +107,14 @@ const SignUp = () => {
     try {
       const { confirmPassword, ...userData } = formData;
       
-      // Register the user using our auth service
-      await register(userData);
+      // Call the auth service to register the user (this now sends verification email)
+      const response = await authService.register(userData);
+      
+      // Store email for potential resend verification
+      localStorage.setItem('verificationEmail', formData.email);
+      
+      // Show success message instead of auto-login
+      setRegistrationSuccess(true);
       
       // Reset form on success
       setFormData({
@@ -120,8 +127,6 @@ const SignUp = () => {
         confirmPassword: ''
       });
       
-      // Navigate to home page after successful signup and auto-login
-      navigate('/');
     } catch (error) {
       console.error('Sign up error:', error);
       
@@ -138,19 +143,21 @@ const SignUp = () => {
   return (
     <div className="signup">
       <div className="signup__container">
-        {/* Left Side - Form */}
+        {/* Left Side - Form or Success Message */}
         <div className="signup__form-section">
           <div className="signup__form-container">
-            {/* Header */}
-            <div className="signup__header">
-              <h1 className="signup__title">Create Account</h1>
-              <p className="signup__subtitle">
-                Join Stack Technologies and build your dream gaming setup
-              </p>
-            </div>
+            {!registrationSuccess ? (
+              <>
+                {/* Header */}
+                <div className="signup__header">
+                  <h1 className="signup__title">Create Account</h1>
+                  <p className="signup__subtitle">
+                    Join Stack Technologies and build your dream gaming setup
+                  </p>
+                </div>
 
-            {/* Form */}
-            <form className="signup__form" onSubmit={handleSubmit}>
+                {/* Form */}
+                <form className="signup__form" onSubmit={handleSubmit}>
               {/* Name Fields */}
               <div className="form__group form__group--inline">
                 <div className="form__field">
@@ -389,6 +396,40 @@ const SignUp = () => {
                 </p>
               </div>
             </form>
+            </>
+            ) : (
+              <div className="signup__success">
+                <div className="signup__success-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22,4 12,14.01 9,11.01"></polyline>
+                  </svg>
+                </div>
+                <h2 className="signup__success-title">Account Created Successfully!</h2>
+                <p className="signup__success-message">
+                  We've sent a verification email to your email address. 
+                  Please check your inbox and click the verification link to activate your account.
+                </p>
+                <div className="signup__success-actions">
+                  <button 
+                    className="form__submit"
+                    onClick={() => navigate('/login')}
+                  >
+                    Go to Login
+                  </button>
+                  <p className="signup__success-help">
+                    Didn't receive the email? Check your spam folder or{' '}
+                    <button 
+                      type="button"
+                      className="form__link"
+                      onClick={() => setRegistrationSuccess(false)}
+                    >
+                      try again
+                    </button>
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 

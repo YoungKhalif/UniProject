@@ -1,7 +1,9 @@
 // controllers_sequelize/authController.js
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 const { User } = require('../models_sequelize');
 const { Op } = require('sequelize');
+const emailService = require('../services/emailService');
 
 exports.register = async (req, res) => {
   const { 
@@ -26,6 +28,10 @@ exports.register = async (req, res) => {
       return res.status(400).json({ msg: 'Username already taken' });
     }
 
+    // Generate email verification token
+    const emailVerificationToken = crypto.randomBytes(32).toString('hex');
+    const emailVerificationExpires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+
     // Create new user
     const user = await User.create({ 
       name: `${firstName} ${lastName}`,
@@ -34,14 +40,21 @@ exports.register = async (req, res) => {
       username,
       email, 
       password,
-      phoneNumber: phoneNumber || null 
+      phoneNumber: phoneNumber || null,
+      emailVerificationToken,
+      emailVerificationExpires,
+      isEmailVerified: false
     });
+
+    // Send welcome email with verification link
+    await emailService.sendWelcomeEmail(user, emailVerificationToken);
 
     // Create JWT
     const payload = {
       user: {
         id: user.id,
-        role: user.role
+        role: user.role,
+        isEmailVerified: user.isEmailVerified
       }
     };
 
@@ -51,7 +64,10 @@ exports.register = async (req, res) => {
       { expiresIn: '7d' },
       (err, token) => {
         if (err) throw err;
-        res.json({ token });
+        res.json({ 
+          token, 
+          message: 'Registration successful! Please check your email to verify your account.' 
+        });
       }
     );
   } catch (err) {
@@ -122,7 +138,6 @@ exports.getMe = async (req, res) => {
 };
 
 // Generate a random token for password reset
-const crypto = require('crypto');
 const { promisify } = require('util');
 const randomBytes = promisify(crypto.randomBytes);
 
@@ -147,21 +162,19 @@ exports.forgotPassword = async (req, res) => {
     user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
     await user.save();
 
-    // In a production environment, you would send an actual email here.
-    // For this demo, we'll just return the token in the response
     console.log(`Password reset token for ${email}: ${token}`);
     
-    // TODO: Implement email sending functionality
-    // const resetUrl = `${req.protocol}://${req.get('host')}/reset-password/${token}`;
-    // await sendEmail({
-    //   email: user.email,
-    //   subject: 'Password Reset Request',
-    //   message: `You requested a password reset. Please click on the link to reset your password: ${resetUrl}`
-    // });
+    // Send password reset email
+    try {
+      await emailService.sendPasswordResetEmail(user, token);
+      console.log(`Password reset email sent to ${email}`);
+    } catch (emailError) {
+      console.error('Failed to send password reset email:', emailError);
+      // Continue execution - don't fail the request if email fails
+    }
 
     res.status(200).json({ 
-      msg: 'If an account with that email exists, a password reset link has been sent.',
-      token // Only for testing - remove in production!
+      msg: 'If an account with that email exists, a password reset link has been sent.'
     });
   } catch (err) {
     console.error('Forgot password error:', err);
@@ -172,6 +185,7 @@ exports.forgotPassword = async (req, res) => {
 exports.verifyResetToken = async (req, res) => {
   try {
     const { token } = req.params;
+    console.log('Verifying reset token:', token);
 
     // Find user by reset token and check if token is still valid
     const user = await User.findOne({ 
@@ -184,9 +198,24 @@ exports.verifyResetToken = async (req, res) => {
     });
 
     if (!user) {
+      console.log('No user found with token or token expired');
+      console.log('Current time:', Date.now());
+      
+      // Let's also check if there's a user with this token but expired
+      const expiredUser = await User.findOne({ 
+        where: { resetPasswordToken: token } 
+      });
+      
+      if (expiredUser) {
+        console.log('Found user with expired token. Expiry was:', expiredUser.resetPasswordExpires);
+      } else {
+        console.log('No user found with this token at all');
+      }
+      
       return res.status(400).json({ msg: 'Password reset token is invalid or has expired' });
     }
 
+    console.log('Token is valid for user:', user.email);
     // Return success if token is valid
     res.status(200).json({ msg: 'Token is valid' });
   } catch (err) {
@@ -225,5 +254,87 @@ exports.resetPassword = async (req, res) => {
   } catch (err) {
     console.error('Reset password error:', err);
     res.status(500).json({ msg: 'Server error. Could not reset password.' });
+  }
+};
+
+// Email verification endpoint
+exports.verifyEmail = async (req, res) => {
+  try {
+    const { token } = req.params;
+    console.log('Verifying email with token:', token);
+
+    // Find user by verification token and check if token is still valid
+    const user = await User.findOne({
+      where: {
+        emailVerificationToken: token,
+        emailVerificationExpires: {
+          [Op.gt]: Date.now() // Greater than current time
+        }
+      }
+    });
+
+    if (!user) {
+      console.log('No user found with token or token expired');
+      return res.status(400).json({ msg: 'Email verification token is invalid or has expired' });
+    }
+
+    console.log('Found user:', user.email, 'Current verification status:', user.isEmailVerified);
+
+    // Update user to verified
+    await user.update({
+      isEmailVerified: true,
+      emailVerificationToken: null,
+      emailVerificationExpires: null
+    });
+
+    console.log('User verification updated successfully');
+
+    // Send confirmation email
+    try {
+      await emailService.sendEmailVerificationSuccess(user);
+    } catch (emailError) {
+      console.log('Email confirmation failed but verification succeeded:', emailError.message);
+    }
+
+    res.status(200).json({ 
+      msg: 'Email verified successfully!',
+      success: true 
+    });
+  } catch (err) {
+    console.error('Email verification error:', err);
+    res.status(500).json({ msg: 'Server error. Could not verify email.' });
+  }
+};
+
+// Resend email verification
+exports.resendEmailVerification = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      return res.status(404).json({ msg: 'User not found' });
+    }
+
+    if (user.isEmailVerified) {
+      return res.status(400).json({ msg: 'Email is already verified' });
+    }
+
+    // Generate new verification token
+    const emailVerificationToken = crypto.randomBytes(32).toString('hex');
+    const emailVerificationExpires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+
+    await user.update({
+      emailVerificationToken,
+      emailVerificationExpires
+    });
+
+    // Send verification email
+    await emailService.sendWelcomeEmail(user, emailVerificationToken);
+
+    res.status(200).json({ msg: 'Verification email sent successfully!' });
+  } catch (err) {
+    console.error('Resend verification error:', err);
+    res.status(500).json({ msg: 'Server error. Could not send verification email.' });
   }
 };

@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import AuthLinks from './AuthLinks';
+import NotificationButton from './NotificationButton';
 import './css/Header.css';
 
 const Header = () => {
@@ -72,6 +73,9 @@ const Header = () => {
                 </button>
               </form>
             </div>
+
+            {/* Notifications - only show for authenticated users */}
+            {isAuthenticated && <NotificationButton />}
 
             {/* Auth Buttons or User Profile */}
             <div className="header__auth">

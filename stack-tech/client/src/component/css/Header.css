@@ -46,6 +46,11 @@
   gap: 1.5rem;
 }
 
+/* Notification Integration */
+.notification-button-container {
+  margin: 0 0.5rem;
+}
+
 /* Bottom Layer - Logo and Navigation */
 .header__bottom {
   background: var(--color-muted-light-grey);
