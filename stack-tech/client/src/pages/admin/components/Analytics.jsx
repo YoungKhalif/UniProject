@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
 import { motion } from 'framer-motion';
+import { adminService } from '../../../services/adminService';
 import '../Dashboard.css';
 import './AdminStyles.css';
 
-const Analytics = () => {
+const Analytics = forwardRef((props, ref) => {
   const [analyticsData, setAnalyticsData] = useState({
     revenue: {
       daily: [],
@@ -30,12 +31,52 @@ const Analytics = () => {
   });
   const [loading, setLoading] = useState(true);
   const [dateRange, setDateRange] = useState('30days');
+  
+  // Expose methods to parent component
+  useImperativeHandle(ref, () => ({
+    showReports: () => {
+      // Set the date range to default and ensure reports section is visible
+      setDateRange('30days');
+    },
+    exportReports: () => {
+      // This function would handle report exporting
+      console.log('Exporting analytics reports...');
+      // You could implement PDF export or CSV export here
+      return {
+        success: true,
+        message: 'Reports exported successfully'
+      };
+    }
+  }));
 
   useEffect(() => {
     const fetchAnalytics = async () => {
       setLoading(true);
-      // Simulate API call
-      setTimeout(() => {
+      try {
+        const response = await adminService.getAnalytics(dateRange);
+        
+        // The API returns analytics data at the top level
+        if (response.data) {
+          setAnalyticsData({
+            revenue: {
+              ...analyticsData.revenue,
+              ...(response.data.salesData && { daily: response.data.salesData })
+            },
+            products: {
+              ...analyticsData.products,
+              ...(response.data.topProducts && { topSelling: response.data.topProducts })
+            },
+            orders: {
+              ...analyticsData.orders
+            },
+            customers: {
+              ...analyticsData.customers
+            }
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching analytics:', error);
+        // Fallback to mock data on error
         const mockData = {
           revenue: {
             daily: [
@@ -89,12 +130,13 @@ const Analytics = () => {
           }
         };
         setAnalyticsData(mockData);
+      } finally {
         setLoading(false);
-      }, 1000);
+      }
     };
 
     fetchAnalytics();
-  }, [dateRange]);
+  }, [dateRange, analyticsData.customers, analyticsData.orders, analyticsData.products, analyticsData.revenue]);
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-US', {
@@ -303,6 +345,6 @@ const Analytics = () => {
       </div>
     </div>
   );
-};
+});
 
 export default Analytics;

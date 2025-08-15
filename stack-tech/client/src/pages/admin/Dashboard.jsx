@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ProductManagement from './components/ProductManagement';
 import OrderManagement from './components/OrderManagement';
 import UserManagement from './components/UserManagement';
@@ -6,6 +6,7 @@ import Analytics from './components/Analytics';
 import InventoryManagement from './components/InventoryManagement';
 import Settings from './components/Settings';
 import { useAuth } from '../../context/AuthContext';
+import { adminService } from '../../services/adminService';
 import './Dashboard.css';
 import { motion } from 'framer-motion';
 
@@ -22,26 +23,70 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
 
+  // Refs for accessing child component methods
+  const productManagementRef = useRef(null);
+  const orderManagementRef = useRef(null);
+  const analyticsRef = useRef(null);
+
+  // Enhanced Quick Action handlers
+  const handleAddProduct = () => {
+    setActiveTab('products');
+    // Use setTimeout to ensure the component is rendered before calling the method
+    setTimeout(() => {
+      if (productManagementRef.current) {
+        productManagementRef.current.openAddModal();
+      }
+    }, 100);
+  };
+
+  const handleViewOrders = () => {
+    setActiveTab('orders');
+    // Show pending orders if there are any
+    setTimeout(() => {
+      if (orderManagementRef.current && dashboardStats.pendingOrders > 0) {
+        orderManagementRef.current.showPendingOrders();
+      }
+    }, 100);
+  };
+
+  const handleViewReports = () => {
+    setActiveTab('analytics');
+    setTimeout(() => {
+      if (analyticsRef.current) {
+        analyticsRef.current.showReports();
+      }
+    }, 100);
+  };
+
   useEffect(() => {
     // Fetch dashboard overview stats
     const fetchDashboardStats = async () => {
       try {
         setLoading(true);
-        // This would fetch actual stats from your API
-        // For now, using mock data
-        setTimeout(() => {
+        const response = await adminService.getDashboardStats();
+        
+        if (response.data.success) {
           setDashboardStats({
-            totalProducts: 45,
-            totalOrders: 128,
-            totalUsers: 89,
-            totalRevenue: 45280.50,
-            lowStockItems: 8,
-            pendingOrders: 12
+            totalProducts: response.data.data.totalProducts,
+            totalOrders: response.data.data.totalOrders,
+            totalUsers: response.data.data.totalUsers,
+            totalRevenue: response.data.data.totalRevenue,
+            lowStockItems: response.data.data.lowStockItems,
+            pendingOrders: response.data.data.pendingOrders
           });
-          setLoading(false);
-        }, 1000);
+        }
       } catch (error) {
         console.error('Error fetching dashboard stats:', error);
+        // Fallback to mock data on error
+        setDashboardStats({
+          totalProducts: 45,
+          totalOrders: 128,
+          totalUsers: 89,
+          totalRevenue: 45280.50,
+          lowStockItems: 8,
+          pendingOrders: 12
+        });
+      } finally {
         setLoading(false);
       }
     };
@@ -52,21 +97,35 @@ const Dashboard = () => {
   const renderTabContent = () => {
     switch (activeTab) {
       case 'overview':
-        return <DashboardOverview stats={dashboardStats} />;
+        return <DashboardOverview 
+          stats={dashboardStats} 
+          onAddProduct={handleAddProduct}
+          onViewOrders={handleViewOrders}
+          onViewReports={handleViewReports}
+          onShowInventory={() => setActiveTab('inventory')}
+          onShowOrders={() => setActiveTab('orders')}
+        />;
       case 'products':
-        return <ProductManagement />;
+        return <ProductManagement ref={productManagementRef} />;
       case 'orders':
-        return <OrderManagement />;
+        return <OrderManagement ref={orderManagementRef} />;
       case 'users':
         return <UserManagement />;
       case 'inventory':
         return <InventoryManagement />;
       case 'analytics':
-        return <Analytics />;
+        return <Analytics ref={analyticsRef} />;
       case 'settings':
         return <Settings />;
       default:
-        return <DashboardOverview stats={dashboardStats} />;
+        return <DashboardOverview 
+          stats={dashboardStats} 
+          onAddProduct={handleAddProduct}
+          onViewOrders={handleViewOrders}
+          onViewReports={handleViewReports}
+          onShowInventory={() => setActiveTab('inventory')}
+          onShowOrders={() => setActiveTab('orders')}
+        />;
     }
   };
 
@@ -194,7 +253,7 @@ const Dashboard = () => {
 };
 
 // Dashboard Overview Component
-const DashboardOverview = ({ stats }) => {
+const DashboardOverview = ({ stats, onAddProduct, onViewOrders, onViewReports, onShowInventory, onShowOrders }) => {
   return (
     <div className="dashboard-overview">
       <div className="dashboard-title mb-8">
@@ -299,15 +358,32 @@ const DashboardOverview = ({ stats }) => {
       >
         <h3 className="text-lg font-semibold mb-4">Quick Actions</h3>
         <div className="action-buttons">
-          <button className="action-btn primary bg-violet-accent text-white">
+          <button 
+            className="action-btn primary bg-violet-accent text-white"
+            onClick={onAddProduct}
+            aria-label="Add new product"
+          >
             <i className="fas fa-plus mr-2"></i>
             Add Product
           </button>
-          <button className="action-btn secondary bg-muted-light-grey text-dark-charcoal">
+          <button 
+            className="action-btn secondary bg-muted-light-grey text-dark-charcoal"
+            onClick={onViewOrders}
+            aria-label="View all orders"
+          >
             <i className="fas fa-eye mr-2"></i>
             View Orders
+            {stats.pendingOrders > 0 && (
+              <span className="ml-2 bg-red-500 text-white rounded-full px-2 py-1 text-xs">
+                {stats.pendingOrders}
+              </span>
+            )}
           </button>
-          <button className="action-btn accent bg-soft-blue-grey text-white">
+          <button 
+            className="action-btn accent bg-soft-blue-grey text-white"
+            onClick={onViewReports}
+            aria-label="View analytics reports"
+          >
             <i className="fas fa-chart-bar mr-2"></i>
             View Reports
           </button>
@@ -324,13 +400,25 @@ const DashboardOverview = ({ stats }) => {
         >
           <h3 className="text-lg font-semibold mb-4">Alerts</h3>
           {stats.lowStockItems > 0 && (
-            <div className="alert warning bg-amber-50 border-l-4 border-amber-500 p-4 mb-4">
+            <div 
+              className="alert warning bg-amber-50 border-l-4 border-amber-500 p-4 mb-4 cursor-pointer hover:bg-amber-100 transition-colors"
+              onClick={onShowInventory}
+              role="button"
+              tabIndex="0"
+              aria-label="View low stock items"
+            >
               <i className="fas fa-exclamation-triangle mr-2 text-amber-500"></i>
               <span>{stats.lowStockItems} items are running low on stock</span>
             </div>
           )}
           {stats.pendingOrders > 0 && (
-            <div className="alert info bg-blue-50 border-l-4 border-blue-500 p-4 mb-4">
+            <div 
+              className="alert info bg-blue-50 border-l-4 border-blue-500 p-4 mb-4 cursor-pointer hover:bg-blue-100 transition-colors"
+              onClick={onShowOrders}
+              role="button"
+              tabIndex="0"
+              aria-label="View pending orders"
+            >
               <i className="fas fa-clock mr-2 text-blue-500"></i>
               <span>{stats.pendingOrders} orders are pending processing</span>
             </div>

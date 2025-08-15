@@ -34,6 +34,10 @@ const Order = sequelize.define('Order', {
     type: DataTypes.ENUM('pending', 'processing', 'shipped', 'delivered', 'cancelled'),
     defaultValue: 'pending'
   },
+  trackingNumber: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
   paymentMethod: {
     type: DataTypes.STRING
   },

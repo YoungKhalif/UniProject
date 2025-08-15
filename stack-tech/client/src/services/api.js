@@ -16,10 +16,36 @@ api.interceptors.request.use(
     const token = localStorage.getItem('token');
     if (token) {
       config.headers['x-auth-token'] = token;
+      
+      // Only log for debugging
+      if (import.meta.env.MODE !== 'production') {
+        console.log('Using token:', token.substring(0, 20) + '...');
+      }
+    } else {
+      console.log('No token found in localStorage');
     }
     return config;
   },
   (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// Add a response interceptor to handle authentication errors
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    // If the error is due to authentication issues
+    if (error.response && error.response.status === 401 && localStorage.getItem('token')) {
+      console.log('Authentication error detected, clearing auth data');
+      
+      // Clear auth data from localStorage
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      
+      // Redirect to login if needed
+      // window.location.href = '/login';
+    }
     return Promise.reject(error);
   }
 );
@@ -29,6 +55,7 @@ export const authService = {
   register: (userData) => api.post('/auth/register', userData),
   login: (credentials) => api.post('/auth/login', credentials),
   getCurrentUser: () => api.get('/auth/me'),
+  refreshToken: () => api.get('/auth/refresh'),
   forgotPassword: (email) => api.post('/auth/forgot-password', { email }),
   resetPassword: (token, password) => api.post(`/auth/reset-password/${token}`, { password }),
   verifyResetToken: (token) => api.get(`/auth/verify-reset-token/${token}`),
@@ -40,20 +67,20 @@ export const productService = {
   getProductById: (id) => api.get(`/products/${id}`),
   getProductsByCategory: (category) => api.get(`/products/category/${category}`),
   searchProducts: (term) => api.get(`/products/search?term=${term}`),
-  // Admin methods
-  createProduct: (productData) => api.post('/products', productData),
-  updateProduct: (id, productData) => api.put(`/products/${id}`, productData),
-  deleteProduct: (id) => api.delete(`/products/${id}`),
+  // Admin methods - now route through admin endpoints
+  createProduct: (productData) => api.post('/admin/products', productData),
+  updateProduct: (id, productData) => api.put(`/admin/products/${id}`, productData),
+  deleteProduct: (id) => api.delete(`/admin/products/${id}`),
 };
 
 // Orders service
 export const orderService = {
   createOrder: (orderData) => api.post('/orders', orderData),
   getUserOrders: (userId) => api.get(`/orders/user/${userId}`),
-  // Admin methods
-  getAllOrders: () => api.get('/orders'),
+  // Admin methods - now route through admin endpoints
+  getAllOrders: () => api.get('/admin/orders'),
   getOrderById: (id) => api.get(`/orders/${id}`),
-  updateOrderStatus: (id, statusData) => api.put(`/orders/${id}`, statusData),
+  updateOrderStatus: (id, statusData) => api.put(`/admin/orders/${id}`, statusData),
 };
 
 // Configurations service

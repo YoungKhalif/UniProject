@@ -14,6 +14,16 @@ import Unauthorized from './pages/Unauthorized';
 import NotificationDemo from './pages/NotificationDemo';
 import EmailVerification from './pages/EmailVerification';
 
+// New Pages
+import GamingLaptops from './pages/GamingLaptops';
+import Peripherals from './pages/Peripherals';
+import Components from './pages/Components';
+import Support from './pages/Support';
+import Warranty from './pages/Warranty';
+import Shipping from './pages/Shipping';
+import About from './pages/About';
+import FAQ from './pages/FAQ';
+
 // Auth Components
 import SignUp from './component/SignUp';
 import Login from './component/Login';
@@ -58,6 +68,21 @@ function AppContent() {
         <Route path="/accessories" element={
           <ProtectedRoute>
             <Accessories />
+          </ProtectedRoute>
+        } />
+        <Route path="/gaming-laptops" element={
+          <ProtectedRoute>
+            <GamingLaptops />
+          </ProtectedRoute>
+        } />
+        <Route path="/peripherals" element={
+          <ProtectedRoute>
+            <Peripherals />
+          </ProtectedRoute>
+        } />
+        <Route path="/components" element={
+          <ProtectedRoute>
+            <Components />
           </ProtectedRoute>
         } />
         <Route path="/items" element={
@@ -124,6 +149,26 @@ function AppContent() {
             <NotificationDemo />
           </ProtectedRoute>
         } />
+
+        {/* Support and Company Pages */}
+        <Route path="/support" element={<Support />} />
+        <Route path="/warranty" element={<Warranty />} />
+        <Route path="/shipping" element={<Shipping />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/faq" element={<FAQ />} />
+        
+        {/* Placeholder routes for other footer links */}
+        <Route path="/build-gallery" element={<div>Build Gallery - Coming Soon</div>} />
+        <Route path="/contact" element={<div>Contact Us - Coming Soon</div>} />
+        <Route path="/careers" element={<div>Careers - Coming Soon</div>} />
+        <Route path="/press" element={<div>Press & Media - Coming Soon</div>} />
+        <Route path="/partners" element={<div>Partners - Coming Soon</div>} />
+        <Route path="/testimonials" element={<div>Customer Reviews - Coming Soon</div>} />
+        <Route path="/blog" element={<div>Tech Blog - Coming Soon</div>} />
+        <Route path="/privacy" element={<div>Privacy Policy - Coming Soon</div>} />
+        <Route path="/terms" element={<div>Terms of Service - Coming Soon</div>} />
+        <Route path="/cookies" element={<div>Cookie Policy - Coming Soon</div>} />
+        <Route path="/accessibility" element={<div>Accessibility - Coming Soon</div>} />
 
         {/* Fallback route */}
         <Route path="*" element={<Home />} />

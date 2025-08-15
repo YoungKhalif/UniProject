@@ -122,17 +122,56 @@ exports.login = async (req, res) => {
 
 exports.getMe = async (req, res) => {
   try {
+    console.log('getMe called with user id:', req.user?.id);
+    
+    // Check if req.user exists
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({ msg: 'User ID missing from token payload' });
+    }
+    
     const user = await User.findByPk(req.user.id, {
       attributes: { exclude: ['password'] }
     });
     
     if (!user) {
+      console.log('User not found with ID:', req.user.id);
       return res.status(404).json({ msg: 'User not found' });
     }
     
+    console.log('User found:', user.username);
     res.json(user);
   } catch (err) {
-    console.error(err.message);
+    console.error('getMe error:', err.message);
+    res.status(500).send('Server error');
+  }
+};
+
+// Refresh user authentication token
+exports.refreshToken = async (req, res) => {
+  try {
+    // User is already authenticated through the auth middleware
+    const { id, role } = req.user;
+    
+    // Create a fresh token
+    const payload = {
+      user: {
+        id,
+        role
+      }
+    };
+
+    // Sign and return a new token
+    jwt.sign(
+      payload,
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' },
+      (err, token) => {
+        if (err) throw err;
+        res.json({ token });
+      }
+    );
+  } catch (err) {
+    console.error('Token refresh error:', err.message);
     res.status(500).send('Server error');
   }
 };

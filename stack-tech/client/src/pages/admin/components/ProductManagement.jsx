@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, forwardRef, useImperativeHandle } from 'react';
 // eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from 'framer-motion';
-import { productService } from '../../../services/api';
+import { adminService } from '../../../services/adminService';
+import ImageUpload from '../../../components/ImageUpload';
 import '../Dashboard.css';
 import './AdminStyles.css';
 
-const ProductManagement = () => {
+const ProductManagement = forwardRef((props, ref) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
@@ -13,6 +14,8 @@ const ProductManagement = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [uploading, setUploading] = useState(false);
 
   const [newProduct, setNewProduct] = useState({
     name: '',
@@ -34,28 +37,82 @@ const ProductManagement = () => {
     isPreBuilt: true,
     warranty: '12 months'
   });
+  
+  // Expose methods to parent component
+  useImperativeHandle(ref, () => ({
+    openAddModal: () => {
+      setNewProduct({
+        name: '',
+        description: '',
+        price: '',
+        category: '',
+        stock: '',
+        specifications: {
+          cpu: '',
+          gpu: '',
+          ram: '',
+          storage: '',
+          motherboard: '',
+          psu: '',
+          case: ''
+        },
+        image: '',
+        images: [],
+        isPreBuilt: true,
+        warranty: '12 months'
+      });
+      setSelectedImage(null);
+      setShowAddModal(true);
+    }
+  }));
 
-  useEffect(() => {
-    fetchProducts();
-  }, []);
-
-  const fetchProducts = async () => {
+  const fetchProducts = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await productService.getAllProducts();
-      setProducts(response.data || []);
+      const response = await adminService.getAllProducts({
+        search: searchTerm,
+        category: categoryFilter === 'all' ? undefined : categoryFilter,
+        page: 1,
+        limit: 50
+      });
+      
+      // The API returns products directly at the top level
+      if (response.data && response.data.products) {
+        setProducts(response.data.products || []);
+      }
     } catch (error) {
       console.error('Error fetching products:', error);
+      setProducts([]);
     } finally {
       setLoading(false);
     }
-  };
+  }, [searchTerm, categoryFilter]);
+
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
 
   const handleAddProduct = async (e) => {
     e.preventDefault();
     try {
-      await productService.createProduct(newProduct);
+      setUploading(true);
+      
+      // Create FormData for file upload
+      const formData = new FormData();
+      formData.append('name', newProduct.name);
+      formData.append('description', newProduct.description);
+      formData.append('price', newProduct.price);
+      formData.append('category', newProduct.category);
+      formData.append('stock', newProduct.stock);
+      formData.append('specifications', JSON.stringify(newProduct.specifications));
+      
+      if (selectedImage) {
+        formData.append('image', selectedImage);
+      }
+
+      await adminService.createProduct(formData);
       setShowAddModal(false);
+      setSelectedImage(null);
       setNewProduct({
         name: '',
         description: '',
@@ -79,25 +136,45 @@ const ProductManagement = () => {
       fetchProducts();
     } catch (error) {
       console.error('Error adding product:', error);
+    } finally {
+      setUploading(false);
     }
   };
 
   const handleEditProduct = async (e) => {
     e.preventDefault();
     try {
-      await productService.updateProduct(selectedProduct.id, selectedProduct);
+      setUploading(true);
+      
+      // Create FormData for file upload
+      const formData = new FormData();
+      formData.append('name', selectedProduct.name);
+      formData.append('description', selectedProduct.description);
+      formData.append('price', selectedProduct.price);
+      formData.append('category', selectedProduct.category);
+      formData.append('stock', selectedProduct.stock);
+      formData.append('specifications', JSON.stringify(selectedProduct.specifications || {}));
+      
+      if (selectedImage) {
+        formData.append('image', selectedImage);
+      }
+
+      await adminService.updateProduct(selectedProduct.id, formData);
       setShowEditModal(false);
       setSelectedProduct(null);
+      setSelectedImage(null);
       fetchProducts();
     } catch (error) {
       console.error('Error updating product:', error);
+    } finally {
+      setUploading(false);
     }
   };
 
   const handleDeleteProduct = async (productId) => {
     if (window.confirm('Are you sure you want to delete this product?')) {
       try {
-        await productService.deleteProduct(productId);
+        await adminService.deleteProduct(productId);
         fetchProducts();
       } catch (error) {
         console.error('Error deleting product:', error);
@@ -342,6 +419,17 @@ const ProductManagement = () => {
                 />
               </div>
 
+              {/* Product Image Upload */}
+              <div className="form-group">
+                <label>Product Image</label>
+                <ImageUpload
+                  currentImage={newProduct.image}
+                  onImageSelect={setSelectedImage}
+                  disabled={uploading}
+                  size="medium"
+                />
+              </div>
+
               {/* Specifications */}
               <div className="specs-section">
                 <h4>Specifications</h4>
@@ -397,8 +485,8 @@ const ProductManagement = () => {
                 <button type="button" className="btn-secondary" onClick={() => setShowAddModal(false)}>
                   Cancel
                 </button>
-                <button type="submit" className="btn-primary">
-                  Add Product
+                <button type="submit" className="btn-primary" disabled={uploading}>
+                  {uploading ? 'Adding Product...' : 'Add Product'}
                 </button>
               </div>
             </form>
@@ -461,6 +549,6 @@ const ProductManagement = () => {
       )}
     </motion.div>
   );
-};
+});
 
 export default ProductManagement;

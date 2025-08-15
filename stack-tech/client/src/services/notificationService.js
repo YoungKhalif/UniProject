@@ -11,6 +11,23 @@ class NotificationService {
     this.addNotification = addNotificationFn;
   }
 
+  // Inventory-related notifications
+  createInventoryAlertNotification(itemName, currentStock, minStockLevel) {
+    return {
+      type: 'warning',
+      title: 'Low Stock Alert',
+      message: `${itemName} is running low (${currentStock} units remaining, minimum: ${minStockLevel})`,
+      isToast: true,
+      actions: [
+        {
+          label: 'Restock',
+          style: 'primary',
+          onClick: () => window.location.href = `/admin/inventory`
+        }
+      ]
+    };
+  }
+
   // Order-related notifications
   orderConfirmed(orderData) {
     return this.addNotification({

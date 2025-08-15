@@ -1,0 +1,143 @@
+.gaming-laptops {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.gaming-laptops__main {
+  flex: 1;
+  padding: 2rem 0;
+}
+
+.gaming-laptops__hero {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 4rem 0;
+  text-align: center;
+}
+
+.gaming-laptops__title {
+  font-size: 3rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.gaming-laptops__subtitle {
+  font-size: 1.2rem;
+  opacity: 0.9;
+}
+
+.gaming-laptops__content {
+  padding: 4rem 0;
+}
+
+.gaming-laptops__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.laptop-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.laptop-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.laptop-card__image {
+  height: 200px;
+  background: #f8f9fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.laptop-card__image img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+}
+
+.laptop-card__content {
+  padding: 1.5rem;
+}
+
+.laptop-card__name {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.laptop-card__specs {
+  margin-bottom: 1.5rem;
+}
+
+.spec {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  padding: 0.25rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+.spec__label {
+  font-weight: 500;
+  color: #666;
+}
+
+.spec__value {
+  color: #333;
+  font-weight: 400;
+}
+
+.laptop-card__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.laptop-card__price {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #667eea;
+}
+
+.laptop-card__button {
+  background: #667eea;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.3s ease;
+}
+
+.laptop-card__button:hover {
+  background: #5a6fd8;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+@media (max-width: 768px) {
+  .gaming-laptops__title {
+    font-size: 2rem;
+  }
+  
+  .gaming-laptops__grid {
+    grid-template-columns: 1fr;
+  }
+}

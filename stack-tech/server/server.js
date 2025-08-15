@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const { sequelize } = require('./models_sequelize');
 
 const authMiddleware = require('./middleware/auth');
@@ -10,6 +11,9 @@ const app = express();
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+// Serve static files (for uploaded images)
+app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
 
 // PostgreSQL Connection
 sequelize.authenticate()

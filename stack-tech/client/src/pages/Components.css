@@ -1,0 +1,151 @@
+.components {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.components__main {
+  flex: 1;
+  padding: 2rem 0;
+}
+
+.components__hero {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 4rem 0;
+  text-align: center;
+}
+
+.components__title {
+  font-size: 3rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.components__subtitle {
+  font-size: 1.2rem;
+  opacity: 0.9;
+}
+
+.components__content {
+  padding: 4rem 0;
+}
+
+.components__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.component-category {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.component-category:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.component-category__header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.component-category__icon {
+  font-size: 2rem;
+  margin-right: 1rem;
+}
+
+.component-category__title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.component-category__products {
+  margin-bottom: 2rem;
+}
+
+.component-product {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+.component-product:last-child {
+  border-bottom: none;
+}
+
+.component-product__info {
+  flex: 1;
+}
+
+.component-product__name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.25rem;
+}
+
+.component-product__specs {
+  font-size: 0.875rem;
+  color: #666;
+  margin: 0;
+}
+
+.component-product__price {
+  color: #667eea;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.component-category__button {
+  width: 100%;
+  background: #667eea;
+  color: white;
+  border: none;
+  padding: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.3s ease;
+}
+
+.component-category__button:hover {
+  background: #5a6fd8;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+@media (max-width: 768px) {
+  .components__title {
+    font-size: 2rem;
+  }
+  
+  .components__grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .component-product {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .component-product__price {
+    align-self: flex-end;
+  }
+}

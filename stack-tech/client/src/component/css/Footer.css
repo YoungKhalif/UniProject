@@ -219,6 +219,17 @@
   stroke-width: 2;
 }
 
+.contact-link {
+  color: var(--text-light);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.contact-link:hover {
+  color: var(--color-violet-accent);
+  text-decoration: none;
+}
+
 /* Social Media */
 .footer__social-title {
   font-size: 1rem;

@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNotification } from '../../../component/NotificationSystem';
 import notificationService from '../../../services/notificationService';
+import { adminService } from '../../../services/adminService';
 import '../Dashboard.css';
 import './AdminStyles.css';
 
@@ -103,7 +104,7 @@ const InventoryManagement = () => {
     };
 
     fetchInventory();
-  }, [addNotification]);
+  }, []); // Remove addNotification from dependency array to prevent infinite loop
 
   const handleRestock = async (e) => {
     e.preventDefault();
@@ -111,31 +112,38 @@ const InventoryManagement = () => {
 
     try {
       // Update inventory via API
-      const updatedInventory = inventory.map(item =>
-        item.id === selectedItem.id
-          ? {
-              ...item,
-              currentStock: item.currentStock + parseInt(restockQuantity),
-              lastRestocked: new Date().toISOString().split('T')[0]
-            }
-          : item
-      );
-      setInventory(updatedInventory);
-      
-      // Show success notification
-      addNotification({
-        id: Date.now().toString(),
-        type: 'success',
-        title: 'Inventory Restocked',
-        message: `Successfully added ${restockQuantity} units to ${selectedItem.name}`,
-        timestamp: new Date(),
-        category: 'inventory',
-        priority: 'normal'
+      const response = await adminService.updateStock(selectedItem.id, {
+        quantity: parseInt(restockQuantity),
+        operation: 'add'
       });
       
-      setShowRestockModal(false);
-      setSelectedItem(null);
-      setRestockQuantity('');
+      if (response.data.success) {
+        const updatedInventory = inventory.map(item =>
+          item.id === selectedItem.id
+            ? {
+                ...item,
+                currentStock: item.currentStock + parseInt(restockQuantity),
+                lastRestocked: new Date().toISOString().split('T')[0]
+              }
+            : item
+        );
+        setInventory(updatedInventory);
+        
+        // Show success notification
+        addNotification({
+          id: Date.now().toString(),
+          type: 'success',
+          title: 'Inventory Restocked',
+          message: `Successfully added ${restockQuantity} units to ${selectedItem.name}`,
+          timestamp: new Date(),
+          category: 'inventory',
+          priority: 'normal'
+        });
+        
+        setShowRestockModal(false);
+        setSelectedItem(null);
+        setRestockQuantity('');
+      }
     } catch (error) {
       console.error('Error restocking item:', error);
       addNotification({

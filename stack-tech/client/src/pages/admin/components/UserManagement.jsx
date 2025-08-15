@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { adminService } from '../../../services/adminService';
 import '../Dashboard.css';
 import './AdminStyles.css';
 
@@ -16,8 +17,22 @@ const UserManagement = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       setLoading(true);
-      // Simulate API call
-      setTimeout(() => {
+      try {
+        const response = await adminService.getAllUsers({
+          search: searchTerm,
+          role: roleFilter === 'all' ? undefined : roleFilter,
+          status: statusFilter === 'all' ? undefined : statusFilter,
+          page: 1,
+          limit: 50
+        });
+        
+        // The API returns users directly at the top level
+        if (response.data && response.data.users) {
+          setUsers(response.data.users || []);
+        }
+      } catch (error) {
+        console.error('Error fetching users:', error);
+        // Fallback to mock data on error
         const mockUsers = [
           {
             id: 'USR-001',
@@ -27,69 +42,31 @@ const UserManagement = () => {
             email: 'john@example.com',
             phoneNumber: '+1-555-0123',
             role: 'user',
-            status: 'active',
+            isActive: true,
             lastLogin: '2024-08-10T14:30:00Z',
             registrationDate: '2024-07-15T10:00:00Z',
             totalOrders: 5,
             totalSpent: 2599.95
-          },
-          {
-            id: 'USR-002',
-            firstName: 'Jane',
-            lastName: 'Smith',
-            username: 'janesmith',
-            email: 'jane@example.com',
-            phoneNumber: '+1-555-0124',
-            role: 'admin',
-            status: 'active',
-            lastLogin: '2024-08-11T09:15:00Z',
-            registrationDate: '2024-06-01T08:00:00Z',
-            totalOrders: 12,
-            totalSpent: 5899.88
-          },
-          {
-            id: 'USR-003',
-            firstName: 'Mike',
-            lastName: 'Johnson',
-            username: 'mikej',
-            email: 'mike@example.com',
-            phoneNumber: '+1-555-0125',
-            role: 'user',
-            status: 'inactive',
-            lastLogin: '2024-07-20T16:45:00Z',
-            registrationDate: '2024-05-10T12:30:00Z',
-            totalOrders: 2,
-            totalSpent: 1299.99
-          },
-          {
-            id: 'USR-004',
-            firstName: 'Sarah',
-            lastName: 'Wilson',
-            username: 'sarahw',
-            email: 'sarah@example.com',
-            phoneNumber: '+1-555-0126',
-            role: 'user',
-            status: 'active',
-            lastLogin: '2024-08-09T11:20:00Z',
-            registrationDate: '2024-08-01T14:15:00Z',
-            totalOrders: 1,
-            totalSpent: 899.99
           }
         ];
         setUsers(mockUsers);
+      } finally {
         setLoading(false);
-      }, 1000);
+      }
     };
 
     fetchUsers();
-  }, []);
+  }, [searchTerm, roleFilter, statusFilter]);
 
   const handleRoleChange = async (userId, newRole) => {
     try {
-      // Update user role via API
-      setUsers(users.map(user => 
-        user.id === userId ? { ...user, role: newRole } : user
-      ));
+      const response = await adminService.updateUserRole(userId, newRole);
+      
+      if (response.data.success) {
+        setUsers(users.map(user => 
+          user.id === userId ? { ...user, role: newRole } : user
+        ));
+      }
     } catch (error) {
       console.error('Error updating user role:', error);
     }
@@ -97,10 +74,13 @@ const UserManagement = () => {
 
   const handleStatusChange = async (userId, newStatus) => {
     try {
-      // Update user status via API
-      setUsers(users.map(user => 
-        user.id === userId ? { ...user, status: newStatus } : user
-      ));
+      const response = await adminService.updateUserStatus(userId, newStatus === 'active');
+      
+      if (response.data.success) {
+        setUsers(users.map(user => 
+          user.id === userId ? { ...user, isActive: newStatus === 'active' } : user
+        ));
+      }
     } catch (error) {
       console.error('Error updating user status:', error);
     }
@@ -129,12 +109,13 @@ const UserManagement = () => {
                          user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          user.username.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesRole = roleFilter === 'all' || user.role === roleFilter;
-    const matchesStatus = statusFilter === 'all' || user.status === statusFilter;
+    const userStatus = user.isActive ? 'active' : 'inactive';
+    const matchesStatus = statusFilter === 'all' || userStatus === statusFilter;
     return matchesSearch && matchesRole && matchesStatus;
   });
 
   const totalUsers = users.length;
-  const activeUsers = users.filter(u => u.status === 'active').length;
+  const activeUsers = users.filter(u => u.isActive).length;
   const adminUsers = users.filter(u => u.role === 'admin').length;
 
   if (loading) {
@@ -239,9 +220,9 @@ const UserManagement = () => {
                 </td>
                 <td>
                   <select
-                    value={user.status}
+                    value={user.isActive ? 'active' : 'inactive'}
                     onChange={(e) => handleStatusChange(user.id, e.target.value)}
-                    className={`status-select ${getStatusColor(user.status)}`}
+                    className={`status-select ${getStatusColor(user.isActive ? 'active' : 'inactive')}`}
                   >
                     <option value="active">Active</option>
                     <option value="inactive">Inactive</option>
@@ -310,8 +291,8 @@ const UserManagement = () => {
                     </span>
                   </p>
                   <p><strong>Status:</strong> 
-                    <span className={`status-badge ${getStatusColor(selectedUser.status)}`}>
-                      {selectedUser.status.charAt(0).toUpperCase() + selectedUser.status.slice(1)}
+                    <span className={`status-badge ${getStatusColor(selectedUser.isActive ? 'active' : 'inactive')}`}>
+                      {selectedUser.isActive ? 'Active' : 'Inactive'}
                     </span>
                   </p>
                   <p><strong>Registration Date:</strong> {new Date(selectedUser.registrationDate).toLocaleDateString()}</p>
@@ -342,12 +323,12 @@ const UserManagement = () => {
                   <button className="btn-primary">Send Email</button>
                   <button className="btn-secondary">View Orders</button>
                   <button className="btn-warning">Reset Password</button>
-                  {selectedUser.status === 'active' ? (
+                  {selectedUser.isActive ? (
                     <button 
                       className="btn-danger"
-                      onClick={() => handleStatusChange(selectedUser.id, 'suspended')}
+                      onClick={() => handleStatusChange(selectedUser.id, 'inactive')}
                     >
-                      Suspend User
+                      Deactivate User
                     </button>
                   ) : (
                     <button 

@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, forwardRef, useImperativeHandle } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNotification } from '../../../component/NotificationSystem';
 import notificationService from '../../../services/notificationService';
+import { adminService } from '../../../services/adminService';
 import '../Dashboard.css';
 import './AdminStyles.css';
 
-const OrderManagement = () => {
+const OrderManagement = forwardRef((props, ref) => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState('all');
@@ -13,13 +14,34 @@ const OrderManagement = () => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [showOrderModal, setShowOrderModal] = useState(false);
   const { addNotification } = useNotification();
+  
+  // Expose methods to parent component
+  useImperativeHandle(ref, () => ({
+    showPendingOrders: () => {
+      setStatusFilter('pending');
+    },
+    getOrderCount: () => orders.length
+  }));
 
   // Mock orders data - replace with actual API calls
   useEffect(() => {
     const fetchOrders = async () => {
       setLoading(true);
-      // Simulate API call
-      setTimeout(() => {
+      try {
+        const response = await adminService.getAllOrders({
+          status: statusFilter === 'all' ? undefined : statusFilter,
+          search: searchTerm,
+          page: 1,
+          limit: 50
+        });
+        
+        // The API returns orders directly at the top level, not in data.data.orders
+        if (response.data && response.data.orders) {
+          setOrders(response.data.orders || []);
+        }
+      } catch (error) {
+        console.error('Error fetching orders:', error);
+        // Fallback to mock data on error
         const mockOrders = [
           {
             id: 'ORD-001',
@@ -34,69 +56,49 @@ const OrderManagement = () => {
             shippingAddress: '123 Main St, City, State 12345',
             buildTime: '5-7 business days'
           },
-          {
-            id: 'ORD-002',
-            customerName: 'Jane Smith',
-            customerEmail: 'jane@example.com',
-            items: [
-              { name: 'Workstation Beast', quantity: 1, price: 2499.99 },
-              { name: 'Gaming Monitor', quantity: 2, price: 299.99 }
-            ],
-            total: 3099.97,
-            status: 'building',
-            orderDate: '2024-08-09',
-            shippingAddress: '456 Oak Ave, City, State 12345',
-            buildTime: '7-10 business days'
-          },
-          {
-            id: 'ORD-003',
-            customerName: 'Mike Johnson',
-            customerEmail: 'mike@example.com',
-            items: [
-              { name: 'Budget Gaming PC', quantity: 1, price: 899.99 }
-            ],
-            total: 899.99,
-            status: 'shipped',
-            orderDate: '2024-08-08',
-            shippingAddress: '789 Pine St, City, State 12345',
-            buildTime: '3-5 business days',
-            trackingNumber: 'TRK123456789'
-          }
+          // Add more mock orders...
         ];
         setOrders(mockOrders);
+      } finally {
         setLoading(false);
-      }, 1000);
+      }
     };
 
     fetchOrders();
-  }, []);
+  }, [statusFilter, searchTerm]);
 
   const handleStatusChange = async (orderId, newStatus) => {
     try {
       // Update order status via API
-      setOrders(orders.map(order => 
-        order.id === orderId ? { ...order, status: newStatus } : order
-      ));
-      
-      // Create and show notification
-      const notification = notificationService.createOrderUpdateNotification(
-        orderId,
-        newStatus,
-        { carrier: 'FedEx', trackingNumber: 'FDX' + Math.random().toString(36).substr(2, 9) }
-      );
-      addNotification(notification);
-      
-      // Show admin success notification
-      addNotification({
-        id: Date.now().toString(),
-        type: 'success',
-        title: 'Order Updated',
-        message: `Order ${orderId} status changed to ${newStatus}`,
-        timestamp: new Date(),
-        category: 'admin',
-        priority: 'normal'
+      const response = await adminService.updateOrderStatus(orderId, { 
+        status: newStatus,
+        trackingNumber: newStatus === 'shipped' ? `TRK${Date.now()}` : undefined
       });
       
+      if (response.data.success) {
+        setOrders(orders.map(order => 
+          order.id === orderId ? { ...order, status: newStatus } : order
+        ));
+        
+        // Create and show notification
+        const notification = notificationService.createOrderUpdateNotification(
+          orderId,
+          newStatus,
+          { carrier: 'FedEx', trackingNumber: 'FDX' + Math.random().toString(36).substr(2, 9) }
+        );
+        addNotification(notification);
+        
+        // Show admin success notification
+        addNotification({
+          id: Date.now().toString(),
+          type: 'success',
+          title: 'Order Updated',
+          message: `Order ${orderId} status changed to ${newStatus}`,
+          timestamp: new Date(),
+          category: 'admin',
+          priority: 'normal'
+        });
+      }
     } catch (error) {
       console.error('Error updating order status:', error);
       addNotification({
@@ -318,6 +320,6 @@ const OrderManagement = () => {
       )}
     </div>
   );
-};
+});
 
 export default OrderManagement;

@@ -1,0 +1,242 @@
+.shipping {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.shipping__main {
+  flex: 1;
+}
+
+.shipping__hero {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 4rem 0;
+  text-align: center;
+}
+
+.shipping__title {
+  font-size: 3rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.shipping__subtitle {
+  font-size: 1.2rem;
+  opacity: 0.9;
+}
+
+.shipping__content {
+  padding: 4rem 0;
+}
+
+.shipping__content section {
+  margin-bottom: 4rem;
+}
+
+.shipping__content h2 {
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+  text-align: center;
+  color: #333;
+}
+
+.shipping-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.shipping-option {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+.shipping-option:hover {
+  transform: translateY(-5px);
+}
+
+.shipping-option.featured {
+  border: 2px solid #667eea;
+  transform: scale(1.05);
+}
+
+.shipping-option.featured::before {
+  content: 'Most Popular';
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #667eea;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.shipping-option h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.shipping-price {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #667eea;
+  margin-bottom: 0.5rem;
+}
+
+.shipping-time {
+  font-size: 1.1rem;
+  color: #666;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.shipping-option p {
+  color: #888;
+  font-size: 0.9rem;
+}
+
+.returns-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.return-period,
+.return-conditions {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.return-period h3,
+.return-conditions h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.return-period ul,
+.return-conditions ul {
+  list-style: none;
+  padding: 0;
+}
+
+.return-period li,
+.return-conditions li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #eee;
+  color: #666;
+}
+
+.return-period li:last-child,
+.return-conditions li:last-child {
+  border-bottom: none;
+}
+
+.packaging-features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.packaging-feature {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.packaging-feature:hover {
+  transform: translateY(-5px);
+}
+
+.feature-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.packaging-feature h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.packaging-feature p {
+  color: #666;
+  line-height: 1.5;
+}
+
+.international-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.countries-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+  margin: 2rem 0;
+}
+
+.country-group h4 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.country-group ul {
+  list-style: none;
+  padding: 0;
+}
+
+.country-group li {
+  padding: 0.25rem 0;
+  color: #666;
+}
+
+.international-note {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 6px;
+  color: #666;
+  font-style: italic;
+  margin-top: 2rem;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+@media (max-width: 768px) {
+  .shipping__title {
+    font-size: 2rem;
+  }
+  
+  .shipping-option.featured {
+    transform: none;
+  }
+}

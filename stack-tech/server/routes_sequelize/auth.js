@@ -43,6 +43,12 @@ router.get('/me', require('../middleware/auth'), (req, res) => {
   authController.getMe(req, res);
 });
 
+// @route   GET api/auth/refresh
+// @desc    Refresh user token
+router.get('/refresh', require('../middleware/auth'), (req, res) => {
+  authController.refreshToken(req, res);
+});
+
 // @route   POST api/auth/forgot-password
 // @desc    Send password reset email
 router.post('/forgot-password', [
