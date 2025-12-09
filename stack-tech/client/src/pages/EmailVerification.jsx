@@ -15,7 +15,7 @@ const EmailVerification = () => {
     const verifyEmail = async () => {
       try {
         console.log('Attempting to verify token:', token);
-        const response = await fetch(`http://localhost:5000/api/auth/verify-email/${token}`, {
+        const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/auth/verify-email/${token}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -71,7 +71,7 @@ const EmailVerification = () => {
         return;
       }
 
-      const response = await fetch('http://localhost:5000/api/auth/resend-verification', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/auth/resend-verification`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
