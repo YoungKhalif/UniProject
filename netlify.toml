@@ -1,0 +1,15 @@
+[build]
+  # Base directory - where the client code is located
+  base = "stack-tech/client"
+  
+  # Build command
+  command = "npm run build"
+  
+  # Directory with the built files (relative to base)
+  publish = "dist"
+
+# Redirect all requests to index.html for client-side routing
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
